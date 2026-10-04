@@ -1,16 +1,18 @@
-# Wokwi for VS Code configuration (ESP-IDF project).
-# Build first:  idf.py set-target esp32 && idf.py build
-# flasher_args.json tells Wokwi where the bootloader, partition table and app go.
+# Wokwi for VS Code configuration.
+# Build first with PlatformIO:  pio run
+# Then F1 -> "Wokwi: Start Simulator". If VS Code has the whole repo open,
+# use F1 -> "Wokwi: Select Config File" once and pick this file.
 #
-# If you built with PlatformIO instead, use:
-#   firmware = ".pio/build/esp32dev/firmware.bin"
-#   elf = ".pio/build/esp32dev/firmware.elf"
+# If you build with idf.py instead, swap the two lines below for:
+#   firmware = "build/flasher_args.json"
+#   elf = "build/tank_node.elf"
 #
 # Serial over TCP: the hub can connect with SERIAL_URL=rfc2217://localhost:4000
 # (see prototype/app/README.md). Development only. Never film Wokwi.
+# Keep the simulator tab visible; Wokwi pauses the simulation when it is hidden.
 
 [wokwi]
 version = 1
-firmware = "build/flasher_args.json"
-elf = "build/tank_node.elf"
+firmware = ".pio/build/esp32dev/firmware.bin"
+elf = ".pio/build/esp32dev/firmware.elf"
 rfc2217ServerPort = 4000

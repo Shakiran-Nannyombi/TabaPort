@@ -16,8 +16,8 @@
     { "type": "wokwi-buzzer", "id": "bz1", "top": 200, "left": 240, "attrs": { "volume": "0.1" } }
   ],
   "connections": [
-    [ "esp:TX0", "$serialMonitor:RX", "", [] ],
-    [ "esp:RX0", "$serialMonitor:TX", "", [] ],
+    [ "esp:TX", "$serialMonitor:RX", "", [] ],
+    [ "esp:RX", "$serialMonitor:TX", "", [] ],
 
     [ "ultrasonic1:VCC", "esp:5V", "red", [] ],
     [ "ultrasonic1:GND", "esp:GND.1", "black", [] ],
