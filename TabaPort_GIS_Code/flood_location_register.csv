@@ -1,0 +1,18 @@
+id,place,division,provisional_basin,lat,lon,coord_source,evidence,why_prone,trial_priority
+TP-01,Clock Tower junction (Entebbe Rd / Queensway),Central,Nakivubo,0.3095,32.5785,E,IEEE #5267; concept note; FAM Reports Apr 2025,Valley floor of the Nakivubo system below Nakasero; Kibuli and Mengo hills; several roads converge on one low crossing,High
+TP-02,Bwaise,Kawempe,Lubigi (via Nsooba),0.3500,32.5611,W,IEEE #5267; concept note; PreventionWeb; FAM Reports,Former wetland floor at about 1180 m; dense informal settlement on the drainage line,High
+TP-03,Kalerwe market (Bombo Rd / Gayaza Rd),Kawempe,Lubigi (via Nsooba),0.3525,32.5720,E,IEEE #5267; concept note; FAM Reports,Market and junction on the Nsooba valley line; heavy solid waste load into drains,High
+TP-04,Mulago roundabout,Kawempe,Lubigi (via Nsooba),0.3395,32.5745,E,FAM Reports,Road dip at the foot of Mulago Hill beside the national referral hospital,High
+TP-05,Kubiri roundabout (Bombo Rd),Kawempe,Lubigi (via Nsooba),0.3460,32.5690,E,FAM Reports,Low junction on Bombo Rd between Wandegeya and Bwaise,Medium
+TP-06,Northern Bypass at Lubigi wetland,Kawempe / Rubaga,Lubigi,0.3470,32.5500,E,New Vision (KCCA 68 hotspots),Highway crosses the Lubigi wetland floor; not high ground on this stretch,High
+TP-07,Nakivubo channel at St Balikuddembe market,Central,Nakivubo,0.3110,32.5775,E,New Vision (KCCA 68 hotspots); Wikipedia,Encroached channel in the CBD valley; channel reconstructed to 12 m by Mar 2026,Low (reconstructed section)
+TP-08,Lugogo Bypass,Nakawa / Central,Nakivubo (Lugogo channel),0.3285,32.5990,E,New Vision (KCCA 68 hotspots); Monitor Jul 2026,Low road along the Lugogo channel that feeds Nakivubo,Medium
+TP-09,Mukwano Rd near Kibuli,Central / Makindye,Nakivubo,0.3070,32.5930,E,New Vision; FAM Reports,Industrial area valley floor draining to Nakivubo wetland,Medium
+TP-10,Nateete (Old Masaka Rd),Rubaga,Nalukolongo,0.2983,32.5350,W,New Vision (KCCA 68 hotspots); PreventionWeb,Valley road at about 1190 m on the Nalukolongo headwaters,Medium
+TP-11,Nalukolongo channel,Rubaga,Nalukolongo,0.2960,32.5490,E,New Vision; FAM Reports; Monitor Jul 2026,Primary channel reported as undersized for its catchment (Parliament Jul 2026),High
+TP-12,Ndeeba,Rubaga,Nalukolongo,0.2940,32.5610,E,FAM Reports,Low commercial strip on the Masaka Rd corridor,Medium
+TP-13,Kinawataka,Nakawa,Kinawataka,0.3350,32.6330,E,FAM Reports; PreventionWeb,Kinawataka swamp floor; primary channel,Medium
+TP-14,Kyambogo,Nakawa,Kinawataka,0.3480,32.6290,E,FAM Reports; Monitor Jul 2026,Low ground below Kyambogo hill on the Kinawataka side,Medium
+TP-15,Ntinda (factory close),Nakawa,To confirm in GEE,0.3550,32.6144,W,New Vision (KCCA 68 hotspots),Valley between Ntinda and Naguru hills,Medium
+TP-16,Kansanga / Kasanga-Ggaba,Makindye,Kansanga,0.2872,32.6078,W,FAM Reports; PreventionWeb,Natural low-lying terrain on the Kansanga swamp line,Medium
+TP-17,Port Bell,Nakawa,Lake Victoria shore,0.2890,32.6530,E,FAM Reports,Near lake level at about 1135 m; backwater from the lake,Low
