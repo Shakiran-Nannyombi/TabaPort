@@ -1,0 +1,235 @@
+{
+ "uncertainty_m": 100,
+ "places": [
+  {
+   "place_id": "TP-01",
+   "name": "Clock Tower junction",
+   "aliases": [
+    "clocktower",
+    "clock tower junction",
+    "queensway",
+    "entebbe rd clock tower"
+   ],
+   "lat": 0.3095,
+   "lon": 32.5785,
+   "segment_ids": [
+    "clock_tower_01"
+   ]
+  },
+  {
+   "place_id": "TP-02",
+   "name": "Bwaise",
+   "aliases": [
+    "bwayise",
+    "bwaise market",
+    "bwaise roundabout",
+    "bwaise"
+   ],
+   "lat": 0.35,
+   "lon": 32.5611,
+   "segment_ids": [
+    "bwaise_01"
+   ]
+  },
+  {
+   "place_id": "TP-03",
+   "name": "Kalerwe market",
+   "aliases": [
+    "kalerwe market",
+    "kalerwe mkt",
+    "kaleerwe",
+    "kalerwe"
+   ],
+   "lat": 0.3525,
+   "lon": 32.572,
+   "segment_ids": [
+    "kalerwe_01"
+   ]
+  },
+  {
+   "place_id": "TP-04",
+   "name": "Mulago roundabout",
+   "aliases": [
+    "mulago",
+    "mulago round about",
+    "mulago roundabout"
+   ],
+   "lat": 0.3395,
+   "lon": 32.5745,
+   "segment_ids": [
+    "mulago_rbt_01"
+   ]
+  },
+  {
+   "place_id": "TP-05",
+   "name": "Kubiri roundabout",
+   "aliases": [
+    "kubiri",
+    "kubiri round about"
+   ],
+   "lat": 0.346,
+   "lon": 32.569,
+   "segment_ids": [
+    "kubiri_01"
+   ]
+  },
+  {
+   "place_id": "TP-06",
+   "name": "Northern Bypass at Lubigi wetland",
+   "aliases": [
+    "lubigi",
+    "northern bypass lubigi",
+    "bypass lubigi"
+   ],
+   "lat": 0.347,
+   "lon": 32.55,
+   "segment_ids": []
+  },
+  {
+   "place_id": "TP-07",
+   "name": "Nakivubo channel at St Balikuddembe market",
+   "aliases": [
+    "nakivubo",
+    "balikuddembe",
+    "owino market",
+    "owino"
+   ],
+   "lat": 0.311,
+   "lon": 32.5775,
+   "segment_ids": []
+  },
+  {
+   "place_id": "TP-08",
+   "name": "Lugogo Bypass",
+   "aliases": [
+    "lugogo",
+    "lugogo bypass"
+   ],
+   "lat": 0.3285,
+   "lon": 32.599,
+   "segment_ids": []
+  },
+  {
+   "place_id": "TP-09",
+   "name": "Mukwano Rd near Kibuli",
+   "aliases": [
+    "mukwano",
+    "mukwano road",
+    "kibuli"
+   ],
+   "lat": 0.307,
+   "lon": 32.593,
+   "segment_ids": []
+  },
+  {
+   "place_id": "TP-10",
+   "name": "Nateete",
+   "aliases": [
+    "natete",
+    "nateete",
+    "family loaf"
+   ],
+   "lat": 0.2983,
+   "lon": 32.535,
+   "segment_ids": []
+  },
+  {
+   "place_id": "TP-11",
+   "name": "Nalukolongo channel",
+   "aliases": [
+    "nalukolongo channel",
+    "nalukolongo bridge",
+    "nalukolongo"
+   ],
+   "lat": 0.296,
+   "lon": 32.549,
+   "segment_ids": [
+    "nalukolongo_01"
+   ]
+  },
+  {
+   "place_id": "TP-12",
+   "name": "Ndeeba",
+   "aliases": [
+    "ndeeba",
+    "ndeba"
+   ],
+   "lat": 0.294,
+   "lon": 32.561,
+   "segment_ids": [
+    "ndeeba_01"
+   ]
+  },
+  {
+   "place_id": "TP-13",
+   "name": "Kinawataka",
+   "aliases": [
+    "kinawataka",
+    "kinawattaka"
+   ],
+   "lat": 0.335,
+   "lon": 32.633,
+   "segment_ids": []
+  },
+  {
+   "place_id": "TP-14",
+   "name": "Kyambogo",
+   "aliases": [
+    "kyambogo",
+    "kyambogo university"
+   ],
+   "lat": 0.348,
+   "lon": 32.629,
+   "segment_ids": []
+  },
+  {
+   "place_id": "TP-15",
+   "name": "Ntinda",
+   "aliases": [
+    "ntinda",
+    "ntinda factory close"
+   ],
+   "lat": 0.355,
+   "lon": 32.6144,
+   "segment_ids": []
+  },
+  {
+   "place_id": "TP-16",
+   "name": "Kansanga / Kasanga-Ggaba",
+   "aliases": [
+    "kansanga",
+    "kasanga",
+    "ggaba road kansanga"
+   ],
+   "lat": 0.2872,
+   "lon": 32.6078,
+   "segment_ids": []
+  },
+  {
+   "place_id": "TP-17",
+   "name": "Port Bell",
+   "aliases": [
+    "port bell",
+    "portbell",
+    "luzira port"
+   ],
+   "lat": 0.289,
+   "lon": 32.653,
+   "segment_ids": []
+  },
+  {
+   "place_id": "CD-01",
+   "name": "Campus drain",
+   "aliases": [
+    "campus drain",
+    "makerere drain",
+    "drain near hostel"
+   ],
+   "lat": 0.3338,
+   "lon": 32.5688,
+   "segment_ids": [
+    "campus_drain_01"
+   ]
+  }
+ ]
+}
