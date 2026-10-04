@@ -1,1 +1,12 @@
 forme.md
+.venv/
+__pycache__/
+*.pyc
+prototype/app/data/tabaport.db*
+prototype/sysmatic/tank_node/build/
+prototype/sysmatic/tank_node/.pio/
+prototype/sysmatic/tank_node/sdkconfig
+prototype/sysmatic/tank_node/sdkconfig.old
+prototype/sysmatic/tank_node/sdkconfig.esp32dev
+prototype/sysmatic/tank_node/dependencies.lock
+prototype/sysmatic/tank_node/managed_components/
