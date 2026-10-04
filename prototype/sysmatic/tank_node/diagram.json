@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "author": "TabaPort",
+  "editor": "wokwi",
+  "parts": [
+    { "type": "board-esp32-devkit-c-v4", "id": "esp", "top": 0, "left": 0, "attrs": {} },
+    { "type": "wokwi-hc-sr04", "id": "ultrasonic1", "top": -120, "left": 180, "attrs": { "distance": "41" } },
+    { "type": "wokwi-resistor", "id": "r1", "top": 60, "left": 200, "attrs": { "value": "1000" } },
+    { "type": "wokwi-resistor", "id": "r2", "top": 110, "left": 200, "attrs": { "value": "2000" } },
+    { "type": "wokwi-led", "id": "ledG", "top": 200, "left": 40, "attrs": { "color": "green" } },
+    { "type": "wokwi-led", "id": "ledY", "top": 200, "left": 100, "attrs": { "color": "yellow" } },
+    { "type": "wokwi-led", "id": "ledR", "top": 200, "left": 160, "attrs": { "color": "red" } },
+    { "type": "wokwi-resistor", "id": "rG", "top": 260, "left": 40, "attrs": { "value": "220" } },
+    { "type": "wokwi-resistor", "id": "rY", "top": 260, "left": 100, "attrs": { "value": "220" } },
+    { "type": "wokwi-resistor", "id": "rR", "top": 260, "left": 160, "attrs": { "value": "220" } },
+    { "type": "wokwi-buzzer", "id": "bz1", "top": 200, "left": 240, "attrs": { "volume": "0.1" } }
+  ],
+  "connections": [
+    [ "esp:TX0", "$serialMonitor:RX", "", [] ],
+    [ "esp:RX0", "$serialMonitor:TX", "", [] ],
+
+    [ "ultrasonic1:VCC", "esp:5V", "red", [] ],
+    [ "ultrasonic1:GND", "esp:GND.1", "black", [] ],
+    [ "ultrasonic1:TRIG", "esp:5", "blue", [] ],
+
+    [ "ultrasonic1:ECHO", "r1:1", "orange", [] ],
+    [ "r1:2", "esp:18", "orange", [] ],
+    [ "r2:1", "esp:18", "orange", [] ],
+    [ "r2:2", "esp:GND.1", "black", [] ],
+
+    [ "esp:25", "rG:1", "green", [] ],
+    [ "rG:2", "ledG:A", "green", [] ],
+    [ "ledG:C", "esp:GND.1", "black", [] ],
+
+    [ "esp:26", "rY:1", "gold", [] ],
+    [ "rY:2", "ledY:A", "gold", [] ],
+    [ "ledY:C", "esp:GND.1", "black", [] ],
+
+    [ "esp:27", "rR:1", "red", [] ],
+    [ "rR:2", "ledR:A", "red", [] ],
+    [ "ledR:C", "esp:GND.1", "black", [] ],
+
+    [ "esp:14", "bz1:1", "purple", [] ],
+    [ "bz1:2", "esp:GND.1", "black", [] ]
+  ]
+}

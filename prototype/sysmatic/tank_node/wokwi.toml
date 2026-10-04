@@ -1,0 +1,16 @@
+# Wokwi for VS Code configuration (ESP-IDF project).
+# Build first:  idf.py set-target esp32 && idf.py build
+# flasher_args.json tells Wokwi where the bootloader, partition table and app go.
+#
+# If you built with PlatformIO instead, use:
+#   firmware = ".pio/build/esp32dev/firmware.bin"
+#   elf = ".pio/build/esp32dev/firmware.elf"
+#
+# Serial over TCP: the hub can connect with SERIAL_URL=rfc2217://localhost:4000
+# (see prototype/app/README.md). Development only. Never film Wokwi.
+
+[wokwi]
+version = 1
+firmware = "build/flasher_args.json"
+elf = "build/tank_node.elf"
+rfc2217ServerPort = 4000

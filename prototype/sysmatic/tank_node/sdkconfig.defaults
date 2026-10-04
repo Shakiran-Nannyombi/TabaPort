@@ -1,0 +1,9 @@
+# ESP32-WROOM-32 DevKit, 4 MB flash
+CONFIG_IDF_TARGET="esp32"
+CONFIG_ESPTOOLPY_FLASHSIZE_4MB=y
+
+# UART0 is the data link to the hub. Keep IDF's own logging quiet so the
+# hub sees clean JSON lines (it ignores non-JSON lines anyway).
+CONFIG_ESP_CONSOLE_UART_BAUDRATE=115200
+CONFIG_LOG_DEFAULT_LEVEL_WARN=y
+CONFIG_BOOTLOADER_LOG_LEVEL_WARN=y
