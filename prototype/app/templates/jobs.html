@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% block title %}Jobs{% endblock %}
+{% block content %}
+<div class="jobs-wrap">
+  <div class="jobs-head">
+    <h2>Jobs</h2>
+    <div class="tabs">
+      <button data-show="active" class="active">Active</button>
+      <button data-show="closed">Closed</button>
+      <button data-show="all">All</button>
+    </div>
+    <span class="muted" id="esc-note"></span>
+    <span style="margin-left:auto" class="row">
+      <select id="new-seg"></select>
+      <button id="new-job">Open job by hand</button>
+    </span>
+  </div>
+  <div id="jobs"></div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+(async function () {
+  let show = 'active', crews = [], escalateAfter = 180;
+  const segs = await TP.getJSON('/data/road_segments.geojson');
+  const sel = document.getElementById('new-seg');
+  segs.features.forEach(f => { const o = document.createElement('option'); o.value = f.properties.segment_id; o.textContent = f.properties.name; sel.appendChild(o); });
+  document.getElementById('new-job').onclick = async () => { await TP.post('/api/jobs', { segment_id: sel.value }); load(); };
+
+  document.querySelectorAll('.tabs button').forEach(b => b.onclick = () => {
+    document.querySelectorAll('.tabs button').forEach(x => x.classList.remove('active')); b.classList.add('active');
+    show = b.dataset.show; load();
+  });
+
+  const box = document.getElementById('jobs');
+  function crewOptions(cur) {
+    return `<option value="">assign crew…</option>` + crews.map(c => `<option ${c === cur ? 'selected' : ''}>${c}</option>`).join('');
+  }
+  function row(j) {
+    const unacked = j.status === 'open';
+    const escalated = unacked && j.age_s >= escalateAfter;
+    const d = document.createElement('div'); d.className = 'job' + (escalated ? ' escalated' : '');
+    const btn = (label, action, cls, body) => `<button class="${cls || ''}" data-id="${j.job_id}" data-action="${action}" ${body ? `data-body='${JSON.stringify(body)}'` : ''}>${label}</button>`;
+    let btns = '';
+    if (j.status === 'open') btns += btn('Acknowledge', 'ack', 'primary');
+    if (j.status === 'acked') btns += btn('Crew en route', 'en_route');
+    if (j.status === 'en_route') btns += btn('Crew on site', 'on_site');
+    if (['open', 'acked', 'en_route', 'on_site'].includes(j.status)) {
+      btns += btn('Close', 'close', 'ok') + btn('False alarm', 'false_alarm', 'danger');
+    }
+    const assign = ['open', 'acked', 'en_route', 'on_site'].includes(j.status)
+      ? `<select data-id="${j.job_id}" class="assign">${crewOptions(j.assigned_crew)}</select>` : '';
+    d.innerHTML = `
+      <div><div class="st ${j.status}">${j.status.replace('_', ' ')}</div>
+           <div class="muted" style="font-size:12px;margin-top:4px">#${j.job_id} · ${TP.fmtAge(j.age_s)} ago${escalated ? '<br><b style="color:#e74c3c">UNACKED &gt; ' + Math.round(escalateAfter / 60) + ' min</b>' : ''}</div></div>
+      <div><div class="title">${j.segment_name} <span class="badge ${j.segment_state}">${j.segment_state}</span></div>
+           <div class="meta">${j.alert_state ? 'alert: ' + j.alert_state + (j.alert_level_cm != null ? ' at ' + j.alert_level_cm + ' cm' : '') + ' · ' : ''}${j.node_id ? 'node ' + j.node_id + ' · ' : ''}${j.assigned_crew ? 'crew: <b>' + j.assigned_crew + '</b>' : 'no crew yet'}${j.false_alarm_reason ? ' · ' + j.false_alarm_reason : ''}</div>
+           <div class="act">→ ${j.action || ''}</div></div>
+      <div class="btns">${assign}${btns}</div>`;
+    return d;
+  }
+  async function load() {
+    try {
+      const r = await TP.getJSON('/api/jobs?show=' + show);
+      crews = r.crews; escalateAfter = r.escalate_after_s;
+      document.getElementById('esc-note').textContent = `unacknowledged jobs flash after ${Math.round(escalateAfter / 60)} min`;
+      box.innerHTML = '';
+      if (!r.jobs.length) { box.innerHTML = `<div class="empty">No ${show === 'active' ? 'active ' : ''}jobs. The drain is behaving.</div>`; return; }
+      r.jobs.forEach(j => box.appendChild(row(j)));
+    } catch (e) { console.error(e); }
+  }
+  box.addEventListener('click', async e => {
+    const b = e.target.closest('button[data-action]'); if (!b) return;
+    let body = b.dataset.body ? JSON.parse(b.dataset.body) : {};
+    if (b.dataset.action === 'false_alarm') { const why = prompt('Reason (e.g. debris under probe, crew found drain clear):', 'debris under probe'); if (why === null) return; body = { reason: why }; }
+    try { await TP.post(`/api/jobs/${b.dataset.id}/${b.dataset.action}`, body); load(); } catch (err) { TP.toast(err.message); }
+  });
+  box.addEventListener('change', async e => {
+    const s = e.target.closest('select.assign'); if (!s || !s.value) return;
+    try { await TP.post(`/api/jobs/${s.dataset.id}/assign`, { crew: s.value }); TP.toast('Assigned ' + s.value); load(); } catch (err) { TP.toast(err.message); }
+  });
+  TP.onState(() => load());
+  load();
+})();
+</script>
+{% endblock %}

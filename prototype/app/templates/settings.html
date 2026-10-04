@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Settings{% endblock %}
+{% block content %}
+<div class="settings-wrap">
+  <h2 style="margin-top:0">Calibration and thresholds</h2>
+  <p class="muted">Measured on site with the tape, dry. <code>h_sensor_cm</code> = probe face to drain floor. <code>h_road_cm</code> = road edge to drain floor.
+  Water depth = h_sensor − echo distance. Red also triggers within 10 cm of the road edge. Saving pushes the thresholds to the node so its LEDs agree.</p>
+  <div class="card" style="margin-bottom:14px">
+    <h3>Quick set from drain depth (Joel's rule: yellow 50 %, red 80 %)</h3>
+    <div class="row">
+      <label>Drain depth (road edge → floor) <input id="qs-depth" type="number" step="1" value="60" style="width:90px"> cm</label>
+      <label>Probe above floor <input id="qs-sensor" type="number" step="1" value="50" style="width:90px"> cm</label>
+      <button id="qs-apply" class="primary">Compute and save</button>
+      <span id="qs-out" class="muted"></span>
+    </div>
+  </div>
+  <table id="cfg">
+    {% for k, v in cfg.items() %}
+    <tr><td>{{ k }}</td><td><input data-key="{{ k }}" value="{{ v }}"></td></tr>
+    {% endfor %}
+  </table>
+  <div class="row" style="margin-top:14px"><button id="save" class="primary">Save all</button><span id="saved" class="muted"></span></div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+document.getElementById('save').onclick = async () => {
+  const body = {}; document.querySelectorAll('#cfg input').forEach(i => body[i.dataset.key] = i.value);
+  await TP.post('/api/config', body); document.getElementById('saved').textContent = 'saved ' + new Date().toLocaleTimeString();
+};
+document.getElementById('qs-apply').onclick = async () => {
+  const depth = parseFloat(document.getElementById('qs-depth').value), sensor = parseFloat(document.getElementById('qs-sensor').value);
+  const yellow = Math.round(depth * 0.5), red = Math.min(Math.round(depth * 0.8), depth - 10);
+  const body = { 'h_road_cm.drain_01': depth, 'h_sensor_cm.drain_01': sensor, 'yellow_cm.drain_01': yellow, 'red_cm.drain_01': red };
+  await TP.post('/api/config', body);
+  document.getElementById('qs-out').textContent = `yellow ${yellow} cm, red ${red} cm — saved`;
+  for (const k in body) { const i = document.querySelector(`#cfg input[data-key="${k}"]`); if (i) i.value = body[k]; }
+};
+</script>
+{% endblock %}

@@ -1,0 +1,128 @@
+{% extends "base.html" %}
+{% block title %}Map{% endblock %}
+{% block content %}
+<div class="split">
+  <div id="map"></div>
+  <div class="legend">
+    <div><i style="background:#2ecc71"></i> green · passable</div>
+    <div><i style="background:#f1c40f"></i> yellow · rising, send crew</div>
+    <div><i style="background:#e74c3c"></i> red · close lane</div>
+    <div><i style="background:#7f8c8d"></i> unknown · no data</div>
+    <div><i class="pt" style="background:#9b59b6"></i> flood blackspot (register)</div>
+    <div><i class="pt" style="background:#3498db;outline:2px solid #fff"></i> sensor node</div>
+  </div>
+  <aside class="side">
+    <div class="card">
+      <h3>Road segments</h3>
+      <div id="seg-list" class="seg-list"></div>
+    </div>
+    <div class="card">
+      <h3>Field report (call / SMS)</h3>
+      <div class="row" style="flex-wrap:nowrap">
+        <input id="rep-text" placeholder="e.g. Kalerwe mkt road flooded" style="flex:1">
+        <select id="rep-type"><option value="flooding">flooding</option><option value="blockage">blockage</option><option value="road_impassable">impassable</option><option value="clear">clear</option></select>
+      </div>
+      <div class="row" style="margin-top:8px"><button id="rep-send" class="primary">Log report</button><span id="rep-result" class="muted" style="font-size:13px"></span></div>
+    </div>
+    <div class="card">
+      <h3>Route crew (avoids red)</h3>
+      <div class="row" style="flex-wrap:nowrap">
+        <select id="rt-from" style="flex:1"></select><span class="muted">→</span><select id="rt-to" style="flex:1"></select>
+      </div>
+      <div class="row" style="margin-top:8px"><button id="rt-go">Route</button><button id="rt-clear">Clear</button><span id="rt-result" class="muted" style="font-size:13px"></span></div>
+    </div>
+  </aside>
+</div>
+{% endblock %}
+{% block scripts %}
+<script src="{{ url_for('static', filename='vendor/leaflet/leaflet.js') }}"></script>
+<script>
+(async function () {
+  const C = TP.COLORS;
+  const map = L.map('map', { zoomControl: true, attributionControl: false }).setView([0.330, 32.575], 13);
+  // No tile server: offline policy. Plain dark background; GeoJSON is the map.
+  const segs = await TP.getJSON('/data/road_segments.geojson');
+  const spots = await TP.getJSON('/data/blackspots.geojson');
+
+  const segLayers = {};
+  const segLayer = L.geoJSON(segs, {
+    style: () => ({ color: C.unknown, weight: 7, opacity: .95, lineCap: 'round' }),
+    onEachFeature: (f, l) => {
+      segLayers[f.properties.segment_id] = l;
+      l.bindPopup(() => popupFor(f.properties));
+    }
+  }).addTo(map);
+
+  L.geoJSON(spots, {
+    pointToLayer: (f, ll) => L.circleMarker(ll, { radius: f.properties.shortlist ? 8 : 5, color: '#9b59b6', weight: f.properties.shortlist ? 3 : 1, fillColor: '#9b59b6', fillOpacity: .5 }),
+    onEachFeature: (f, l) => l.bindPopup(`<b>${f.properties.id} ${f.properties.place}</b><br><span class="muted">${f.properties.division} · ${f.properties.basin}</span><br>${f.properties.why_prone}<br><small>Priority: ${f.properties.trial_priority} · ±100 m</small>`)
+  }).addTo(map);
+
+  // sensor node marker at the midpoint of its segment
+  const nodeSeg = segs.features.find(f => f.properties.node_id);
+  let nodeMarker = null;
+  if (nodeSeg) {
+    const c = nodeSeg.geometry.coordinates; const m = c[Math.floor(c.length / 2)];
+    nodeMarker = L.circleMarker([m[1], m[0]], { radius: 9, color: '#fff', weight: 2, fillColor: '#3498db', fillOpacity: 1 }).addTo(map);
+    nodeMarker.bindTooltip('drain_01', { permanent: true, direction: 'right', offset: [10, 0] });
+  }
+  map.fitBounds(segLayer.getBounds().pad(0.15));
+
+  let states = {};
+  function popupFor(p) {
+    const s = states[p.segment_id] || {};
+    return `<b>${p.name}</b><br><span class="muted">${p.road || ''} ${p.place_id ? '· ' + p.place_id : ''}</span><br>
+      <span class="badge ${s.state || 'unknown'}">${s.state || 'unknown'}</span>
+      <small class="muted"> ${s.source || ''} ${s.last_updated ? '· ' + s.last_updated.slice(11) : ''}</small>
+      ${s.notes ? '<br><small>' + s.notes + '</small>' : ''}
+      ${p.node_id ? '' : `<br><div class="row" style="margin-top:6px"><button onclick="TP.setSeg('${p.segment_id}','green')">Mark green</button><button onclick="TP.setSeg('${p.segment_id}','yellow')">Mark yellow</button><button onclick="TP.setSeg('${p.segment_id}','red')">Mark red</button></div>`}`;
+  }
+  TP.setSeg = async (sid, st) => { try { await TP.post(`/api/segments/${sid}/state`, { state: st, note: 'dispatcher override' }); map.closePopup(); } catch (e) { TP.toast(e.message); } };
+
+  const list = document.getElementById('seg-list');
+  function render(st) {
+    states = {}; (st.segments || []).forEach(s => states[s.segment_id] = s);
+    list.innerHTML = '';
+    segs.features.forEach(f => {
+      const p = f.properties; const s = states[p.segment_id] || { state: 'unknown' };
+      const l = segLayers[p.segment_id];
+      if (l) l.setStyle({ color: C[s.state] || C.unknown, weight: s.state === 'red' ? 10 : 7, dashArray: s.state === 'unknown' ? '8 10' : null });
+      const row = document.createElement('div'); row.className = 'seg-row';
+      row.innerHTML = `<span class="sw ${s.state}"></span><span class="n">${p.name}${p.node_id ? ' <small class="muted">· sensor</small>' : ''}</span><span class="s">${s.state}</span>`;
+      row.onclick = () => { map.fitBounds(l.getBounds().pad(0.5)); l.openPopup(); };
+      list.appendChild(row);
+    });
+    const n = st.nodes && st.nodes['drain_01'];
+    if (nodeMarker) nodeMarker.setStyle({ fillColor: n && !n.silent && n.state !== 'unknown' ? C[n.state] : '#3498db' });
+  }
+  TP.onState(render);
+
+  // field report
+  document.getElementById('rep-send').onclick = async () => {
+    const text = document.getElementById('rep-text').value.trim();
+    const type = document.getElementById('rep-type').value;
+    if (!text) return;
+    try {
+      const r = await TP.post('/api/reports', { text, report_type: type });
+      document.getElementById('rep-result').textContent = r.match ? `→ ${r.match.name} (${r.match.score}) → ${r.segment_id}` : 'no place matched; logged without segment';
+      document.getElementById('rep-text').value = '';
+    } catch (e) { TP.toast(e.message); }
+  };
+
+  // routing
+  const from = document.getElementById('rt-from'), to = document.getElementById('rt-to');
+  segs.features.forEach(f => { for (const sel of [from, to]) { const o = document.createElement('option'); o.value = f.properties.segment_id; o.textContent = f.properties.name; sel.appendChild(o); } });
+  from.value = 'campus_drain_01'; to.value = 'bwaise_01';
+  let routeLayer = null;
+  document.getElementById('rt-go').onclick = async () => {
+    try {
+      const r = await TP.post('/api/route', { from: from.value, to: to.value });
+      if (routeLayer) routeLayer.remove();
+      routeLayer = L.polyline(r.path.map(p => [p[1], p[0]]), { color: '#fff', weight: 3, dashArray: '6 8', opacity: .9 }).addTo(map);
+      document.getElementById('rt-result').textContent = `${(r.distance_m / 1000).toFixed(1)} km via ${r.segments.length} segments`;
+    } catch (e) { document.getElementById('rt-result').textContent = e.message; }
+  };
+  document.getElementById('rt-clear').onclick = () => { if (routeLayer) routeLayer.remove(); routeLayer = null; document.getElementById('rt-result').textContent = ''; };
+})();
+</script>
+{% endblock %}

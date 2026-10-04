@@ -1,0 +1,142 @@
+{% extends "base.html" %}
+{% block title %}Live node{% endblock %}
+{% block content %}
+<div class="node-wrap">
+  <div class="card chart-card">
+    <h3>{{ node_id }} · water depth, last 5 minutes <span class="muted" style="text-transform:none;letter-spacing:0">(grey = raw, blue = filtered depth used for state, orange dots = spikes removed)</span></h3>
+    <canvas id="chart"></canvas>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:14px;min-height:0;overflow:auto">
+    <div class="card" style="text-align:center">
+      <h3>State</h3>
+      <span id="n-state" class="badge big unknown">unknown</span>
+      <div id="n-age" class="muted" style="margin-top:8px;font-size:13px"></div>
+    </div>
+    <div class="card">
+      <div class="row" style="align-items:stretch;gap:18px">
+        <div class="gauge" id="gauge"><div class="mark r" id="g-red"></div><div class="mark y" id="g-yel"></div><div class="water" id="g-water"></div></div>
+        <div style="flex:1">
+          <h3>Water depth</h3>
+          <div class="big-num"><span id="n-level">–</span><small>cm</small></div>
+          <div class="kv" style="margin-top:12px">
+            <span class="muted">below road edge</span><span class="v" id="n-road">–</span>
+            <span class="muted">rise rate</span><span class="v" id="n-rate">–</span>
+            <span class="muted">raw echo</span><span class="v" id="n-raw">–</span>
+            <span class="muted">yellow / red at</span><span class="v" id="n-th">–</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <h3>Link</h3>
+      <div class="kv">
+        <span class="muted">serial</span><span class="v" id="n-serial">–</span>
+        <span class="muted">lines received</span><span class="v" id="n-lines">–</span>
+        <span class="muted">unknown after</span><span class="v" id="n-timeout">–</span>
+      </div>
+    </div>
+    <div class="card" id="dev-card" style="display:none">
+      <h3>Dev controls (fake node only)</h3>
+      <div class="row">
+        <input type="range" id="dev-level" min="0" max="40" step="0.5" value="2" style="flex:1"><span id="dev-level-v">2</span> cm
+      </div>
+      <div class="row" style="margin-top:8px">
+        <button id="dev-auto">Auto pour</button><button id="dev-spike">Debris spikes</button><button id="dev-silent">Pull USB</button><button id="dev-reset" class="danger">Reset data</button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+(function () {
+  const NODE = "{{ node_id }}";
+  const C = TP.COLORS;
+  const cv = document.getElementById('chart'), ctx = cv.getContext('2d');
+  let data = { readings: [], thresholds: { yellow_cm: 8, red_cm: 15, h_sensor_cm: 50, h_road_cm: 60 } };
+
+  function draw() {
+    const dpr = window.devicePixelRatio || 1;
+    const W = cv.clientWidth, H = cv.clientHeight;
+    cv.width = W * dpr; cv.height = H * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, W, H);
+    const pad = { l: 44, r: 14, t: 12, b: 26 };
+    const w = W - pad.l - pad.r, h = H - pad.t - pad.b;
+    const th = data.thresholds;
+    const now = Date.now(), span = 5 * 60 * 1000;
+    // raw is plotted as "apparent depth" = h_sensor - echo, so a debris spike shows as a jump the filter removed
+    const rs = data.readings.map(r => ({ t: Date.parse(r.timestamp.replace(' ', 'T') + 'Z'), lvl: r.water_level_cm, raw: Math.max(0, th.h_sensor_cm - r.raw_ultrasonic_cm), f: r.filtered_flag }));
+    const maxY = Math.min(th.h_sensor_cm, Math.max(th.h_road_cm, th.red_cm * 1.5, 20, ...rs.map(r => Math.max(r.lvl, r.raw) + 2)));
+    const x = t => pad.l + w * (1 - (now - t) / span);
+    const y = v => pad.t + h * (1 - v / maxY);
+
+    // bands
+    ctx.fillStyle = 'rgba(241,196,15,.08)'; ctx.fillRect(pad.l, y(th.red_cm), w, y(th.yellow_cm) - y(th.red_cm));
+    ctx.fillStyle = 'rgba(231,76,60,.10)'; ctx.fillRect(pad.l, pad.t, w, y(th.red_cm) - pad.t);
+    // grid + axis labels
+    ctx.strokeStyle = '#2a3442'; ctx.fillStyle = '#8b98a5'; ctx.font = '12px system-ui'; ctx.textAlign = 'right';
+    const step = maxY > 60 ? 20 : maxY > 30 ? 10 : 5;
+    for (let v = 0; v <= maxY; v += step) { ctx.beginPath(); ctx.moveTo(pad.l, y(v)); ctx.lineTo(W - pad.r, y(v)); ctx.stroke(); ctx.fillText(v + '', pad.l - 6, y(v) + 4); }
+    ctx.textAlign = 'center';
+    for (let m = 0; m <= 5; m++) { const t = now - m * 60000; ctx.fillText(m === 0 ? 'now' : '-' + m + ' min', x(t), H - 8); }
+    // thresholds
+    const hline = (v, col, label) => { ctx.strokeStyle = col; ctx.setLineDash([6, 6]); ctx.beginPath(); ctx.moveTo(pad.l, y(v)); ctx.lineTo(W - pad.r, y(v)); ctx.stroke(); ctx.setLineDash([]); ctx.fillStyle = col; ctx.textAlign = 'left'; ctx.fillText(label, pad.l + 6, y(v) - 4); };
+    hline(th.yellow_cm, C.yellow, 'yellow ' + th.yellow_cm + ' cm'); hline(th.red_cm, C.red, 'red ' + th.red_cm + ' cm');
+    if (th.h_road_cm <= maxY) hline(th.h_road_cm, '#fff', 'road edge ' + th.h_road_cm + ' cm');
+    if (!rs.length) { ctx.fillStyle = '#8b98a5'; ctx.textAlign = 'center'; ctx.fillText('waiting for readings…', W / 2, H / 2); return; }
+    // raw (grey)
+    ctx.strokeStyle = '#55606c'; ctx.lineWidth = 1; ctx.beginPath();
+    rs.forEach((r, i) => { const px = x(r.t), py = y(r.raw); i ? ctx.lineTo(px, py) : ctx.moveTo(px, py); }); ctx.stroke();
+    // level (blue), broken where gaps > 5 s
+    ctx.strokeStyle = '#3498db'; ctx.lineWidth = 2.5; ctx.beginPath();
+    rs.forEach((r, i) => { const px = x(r.t), py = y(r.lvl); (i && r.t - rs[i - 1].t < 5000) ? ctx.lineTo(px, py) : ctx.moveTo(px, py); }); ctx.stroke();
+    // filtered dots
+    ctx.fillStyle = '#e67e22'; rs.filter(r => r.f).forEach(r => { ctx.beginPath(); ctx.arc(x(r.t), y(r.raw), 4, 0, 7); ctx.fill(); });
+    // last point
+    const L = rs[rs.length - 1]; ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.arc(x(L.t), y(L.lvl), 4, 0, 7); ctx.fill();
+  }
+
+  async function loadReadings() {
+    try { data = await TP.getJSON(`/api/readings?node=${NODE}&minutes=5`); } catch (e) { }
+    draw();
+  }
+  setInterval(loadReadings, 1000); loadReadings(); window.addEventListener('resize', draw);
+
+  function panel(st) {
+    const n = st.nodes[NODE]; const seg = (st.segments || []).find(s => s.node_id === NODE);
+    const state = seg ? seg.state : 'unknown';
+    const th = data.thresholds;
+    const sb = document.getElementById('n-state'); sb.className = 'badge big ' + state; sb.textContent = state;
+    const live = n && !n.silent && n.level_cm !== undefined && !n.fault && state !== 'unknown';
+    document.getElementById('n-age').textContent = n ? (n.silent ? 'node silent for ' + TP.fmtAge(n.age_s) : n.fault ? 'node alive, no echo (probe fault / out of range)' : 'last reading ' + (n.age_s || 0).toFixed(0) + ' s ago') : 'no readings yet';
+    document.getElementById('n-level').textContent = live ? n.level_cm.toFixed(1) : '–';
+    document.getElementById('n-road').textContent = live ? n.below_road_cm.toFixed(1) + ' cm' : '–';
+    document.getElementById('n-rate').textContent = live && n.rise_rate != null ? (n.rise_rate > 0 ? '+' : '') + n.rise_rate.toFixed(1) + ' cm/min' : '–';
+    document.getElementById('n-raw').textContent = live ? n.raw_cm.toFixed(1) + ' cm' + (n.filtered ? ' (spike filtered)' : '') : '–';
+    document.getElementById('n-th').textContent = th.yellow_cm + ' / ' + th.red_cm + ' cm';
+    document.getElementById('n-serial').textContent = st.serial.connected ? (st.serial.url || '') : 'disconnected';
+    document.getElementById('n-lines').textContent = st.serial.lines;
+    document.getElementById('n-timeout').textContent = st.unknown_after_s + ' s';
+    // gauge
+    const max = Math.max(th.h_sensor_cm, th.red_cm * 1.3, 1);
+    document.getElementById('g-water').style.height = (live ? Math.min(100, 100 * n.level_cm / max) : 0) + '%';
+    document.getElementById('g-water').style.background = live ? (C[state] || '#3498db') : '#333';
+    document.getElementById('g-yel').style.bottom = (100 * th.yellow_cm / max) + '%';
+    document.getElementById('g-red').style.bottom = (100 * th.red_cm / max) + '%';
+    // dev controls
+    const dev = document.getElementById('dev-card');
+    dev.style.display = st.serial.mode === 'fake' ? '' : 'none';
+  }
+  TP.onState(panel);
+
+  // dev controls
+  const lv = document.getElementById('dev-level');
+  lv.oninput = () => { document.getElementById('dev-level-v').textContent = lv.value; TP.post('/api/dev/fake', { level_cm: parseFloat(lv.value), auto: false }); };
+  let auto = false, spike = false, silent = false;
+  document.getElementById('dev-auto').onclick = () => { auto = !auto; TP.post('/api/dev/fake', { auto }); };
+  document.getElementById('dev-spike').onclick = () => { spike = !spike; TP.post('/api/dev/fake', { spike_every: spike ? 7 : 0 }); };
+  document.getElementById('dev-silent').onclick = e => { silent = !silent; e.target.textContent = silent ? 'Plug USB back' : 'Pull USB'; TP.post('/api/dev/fake', { silent }); };
+  document.getElementById('dev-reset').onclick = async () => { if (confirm('Delete all readings, alerts and jobs?')) { await TP.post('/api/dev/reset'); TP.toast('reset'); } };
+})();
+</script>
+{% endblock %}
