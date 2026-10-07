@@ -1,0 +1,19 @@
+# Wokwi for VS Code configuration for the field node.
+# Build:  pio run        then F1 -> "Wokwi: Select Config File" (this file) -> "Wokwi: Start Simulator"
+#
+# idf.py alternative:
+#   firmware = "build/flasher_args.json"
+#   elf = "build/field_node.elf"
+#
+# The microSD card is filled from the sdcard/ folder next to this file.
+# Keep the simulator tab visible; Wokwi pauses the simulation when it is hidden.
+
+[wokwi]
+version = 1
+firmware = ".pio/build/esp32dev/firmware.bin"
+elf = ".pio/build/esp32dev/firmware.elf"
+rfc2217ServerPort = 4001
+
+[[sdcard]]
+folder = "sdcard"
+size = "8M"

@@ -1,0 +1,5 @@
+## ESP-IDF component manager dependencies.
+## In IDF 6.1+ the MQTT client lives in the registry, not the core tree.
+dependencies:
+  espressif/mqtt: "^1.0"
+  idf: ">=5.3"

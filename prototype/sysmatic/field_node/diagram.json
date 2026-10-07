@@ -1,0 +1,114 @@
+{
+  "version": 1,
+  "author": "TabaPort",
+  "editor": "wokwi",
+  "parts": [
+    { "type": "board-esp32-devkit-c-v4", "id": "esp", "top": 60, "left": 300, "attrs": {} },
+
+    { "type": "wokwi-hc-sr04", "id": "probe", "top": -180, "left": 300, "attrs": { "distance": "45" } },
+    { "type": "wokwi-slide-switch", "id": "cable", "top": -90, "left": 520, "attrs": {} },
+    { "type": "wokwi-resistor", "id": "r_e1", "top": -40, "left": 520, "attrs": { "value": "1000" } },
+    { "type": "wokwi-resistor", "id": "r_e2", "top": 0, "left": 520, "attrs": { "value": "2000" } },
+    { "type": "wokwi-text", "id": "t_probe", "top": -200, "left": 300, "attrs": { "text": "ULTRASONIC PROBE (JSN-SR04T stand-in). Switch = probe cable" } },
+
+    { "type": "wokwi-ntc-temperature-sensor", "id": "ntc", "top": -180, "left": 20, "attrs": { "temperature": "24" } },
+    { "type": "wokwi-text", "id": "t_ntc", "top": -200, "left": 20, "attrs": { "text": "AIR TEMP (speed of sound)" } },
+
+    { "type": "wokwi-potentiometer", "id": "batt", "top": -60, "left": 20, "attrs": { "value": "60" } },
+    { "type": "wokwi-text", "id": "t_batt", "top": -80, "left": 20, "attrs": { "text": "BATTERY VOLTAGE (x2 divider)" } },
+
+    { "type": "wokwi-mpu6050", "id": "imu", "top": 60, "left": 20, "attrs": {} },
+    { "type": "wokwi-text", "id": "t_imu", "top": 40, "left": 20, "attrs": { "text": "TILT / TAMPER" } },
+
+    { "type": "wokwi-ds1307", "id": "rtc", "top": 220, "left": 20, "attrs": {} },
+    { "type": "wokwi-text", "id": "t_rtc", "top": 200, "left": 20, "attrs": { "text": "RTC (offline timestamps)" } },
+
+    { "type": "wokwi-lcd2004", "id": "lcd", "top": 340, "left": 300, "attrs": { "pins": "i2c" } },
+    { "type": "wokwi-text", "id": "t_lcd", "top": 320, "left": 300, "attrs": { "text": "ON-SITE READOUT" } },
+
+    { "type": "wokwi-microsd-card", "id": "sd", "top": 60, "left": 640, "attrs": {} },
+    { "type": "wokwi-text", "id": "t_sd", "top": 40, "left": 640, "attrs": { "text": "microSD: log + send queue" } },
+
+    { "type": "wokwi-pushbutton", "id": "btn", "top": 220, "left": 640, "attrs": { "color": "blue", "label": "DRY ZERO (hold 1 s)" } },
+
+    { "type": "wokwi-relay-module", "id": "relay", "top": 320, "left": 640, "attrs": {} },
+    { "type": "wokwi-led", "id": "strobe", "top": 420, "left": 800, "attrs": { "color": "red", "label": "ROAD STROBE" } },
+    { "type": "wokwi-resistor", "id": "r_s", "top": 470, "left": 800, "attrs": { "value": "220" } },
+
+    { "type": "wokwi-led", "id": "ledG", "top": 220, "left": 880, "attrs": { "color": "green" } },
+    { "type": "wokwi-led", "id": "ledY", "top": 220, "left": 930, "attrs": { "color": "yellow" } },
+    { "type": "wokwi-led", "id": "ledR", "top": 220, "left": 980, "attrs": { "color": "red" } },
+    { "type": "wokwi-resistor", "id": "rG", "top": 290, "left": 880, "attrs": { "value": "220" } },
+    { "type": "wokwi-resistor", "id": "rY", "top": 290, "left": 930, "attrs": { "value": "220" } },
+    { "type": "wokwi-resistor", "id": "rR", "top": 290, "left": 980, "attrs": { "value": "220" } },
+    { "type": "wokwi-buzzer", "id": "bz", "top": 60, "left": 900, "attrs": { "volume": "0.1" } }
+  ],
+  "connections": [
+    [ "esp:TX", "$serialMonitor:RX", "", [] ],
+    [ "esp:RX", "$serialMonitor:TX", "", [] ],
+
+    [ "probe:VCC", "esp:5V", "red", [] ],
+    [ "probe:GND", "esp:GND.1", "black", [] ],
+    [ "probe:TRIG", "esp:16", "blue", [] ],
+    [ "probe:ECHO", "r_e1:1", "orange", [] ],
+    [ "r_e1:2", "cable:1", "orange", [] ],
+    [ "cable:2", "esp:17", "orange", [] ],
+    [ "r_e2:1", "esp:17", "orange", [] ],
+    [ "r_e2:2", "esp:GND.1", "black", [] ],
+
+    [ "ntc:VCC", "esp:3V3", "red", [] ],
+    [ "ntc:GND", "esp:GND.1", "black", [] ],
+    [ "ntc:OUT", "esp:35", "cyan", [] ],
+
+    [ "batt:VCC", "esp:3V3", "red", [] ],
+    [ "batt:GND", "esp:GND.1", "black", [] ],
+    [ "batt:SIG", "esp:34", "cyan", [] ],
+
+    [ "imu:VCC", "esp:3V3", "red", [] ],
+    [ "imu:GND", "esp:GND.1", "black", [] ],
+    [ "imu:SDA", "esp:21", "green", [] ],
+    [ "imu:SCL", "esp:22", "yellow", [] ],
+    [ "imu:AD0", "esp:3V3", "red", [] ],
+
+    [ "rtc:5V", "esp:5V", "red", [] ],
+    [ "rtc:GND", "esp:GND.2", "black", [] ],
+    [ "rtc:SDA", "esp:21", "green", [] ],
+    [ "rtc:SCL", "esp:22", "yellow", [] ],
+
+    [ "lcd:VCC", "esp:5V", "red", [] ],
+    [ "lcd:GND", "esp:GND.2", "black", [] ],
+    [ "lcd:SDA", "esp:21", "green", [] ],
+    [ "lcd:SCL", "esp:22", "yellow", [] ],
+
+    [ "sd:VCC", "esp:3V3", "red", [] ],
+    [ "sd:GND", "esp:GND.3", "black", [] ],
+    [ "sd:CS", "esp:5", "purple", [] ],
+    [ "sd:SCK", "esp:18", "purple", [] ],
+    [ "sd:DI", "esp:23", "purple", [] ],
+    [ "sd:DO", "esp:19", "purple", [] ],
+
+    [ "btn:1.l", "esp:4", "white", [] ],
+    [ "btn:2.l", "esp:GND.3", "black", [] ],
+
+    [ "relay:VCC", "esp:5V", "red", [] ],
+    [ "relay:GND", "esp:GND.3", "black", [] ],
+    [ "relay:IN", "esp:13", "magenta", [] ],
+    [ "relay:COM", "esp:5V", "red", [] ],
+    [ "relay:NO", "r_s:1", "red", [] ],
+    [ "r_s:2", "strobe:A", "red", [] ],
+    [ "strobe:C", "esp:GND.3", "black", [] ],
+
+    [ "esp:25", "rG:1", "green", [] ],
+    [ "rG:2", "ledG:A", "green", [] ],
+    [ "ledG:C", "esp:GND.3", "black", [] ],
+    [ "esp:26", "rY:1", "gold", [] ],
+    [ "rY:2", "ledY:A", "gold", [] ],
+    [ "ledY:C", "esp:GND.3", "black", [] ],
+    [ "esp:27", "rR:1", "red", [] ],
+    [ "rR:2", "ledR:A", "red", [] ],
+    [ "ledR:C", "esp:GND.3", "black", [] ],
+
+    [ "esp:14", "bz:1", "purple", [] ],
+    [ "bz:2", "esp:GND.3", "black", [] ]
+  ]
+}

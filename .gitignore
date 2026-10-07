@@ -3,10 +3,10 @@ forme.md
 __pycache__/
 *.pyc
 prototype/app/data/tabaport.db*
-prototype/sysmatic/tank_node/build/
-prototype/sysmatic/tank_node/.pio/
-prototype/sysmatic/tank_node/sdkconfig
-prototype/sysmatic/tank_node/sdkconfig.old
-prototype/sysmatic/tank_node/sdkconfig.esp32dev
-prototype/sysmatic/tank_node/dependencies.lock
-prototype/sysmatic/tank_node/managed_components/
+prototype/sysmatic/*/build/
+prototype/sysmatic/*/.pio/
+prototype/sysmatic/*/sdkconfig
+prototype/sysmatic/*/sdkconfig.old
+prototype/sysmatic/*/sdkconfig.esp32dev
+prototype/sysmatic/*/dependencies.lock
+prototype/sysmatic/*/managed_components/

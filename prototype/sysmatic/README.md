@@ -1,6 +1,16 @@
 # prototype/sysmatic — node hardware and firmware
 
-One ESP32 + one waterproof ultrasonic over a real drain. ESP-IDF, plain C. Wiring is in [`../../docs/phase3/wiring.md`](../../docs/phase3/wiring.md). Parts and prices in [`../../docs/phase3/bom.md`](../../docs/phase3/bom.md).
+Two nodes, both ESP-IDF in plain C, both build with `idf.py` or `pio run`:
+
+| | `tank_node/` | `field_node/` |
+|---|---|---|
+| Purpose | Generation 1, filmed 7 Oct over the real drain | Generation 2 reference design, simulation only, for review with Dr. Nsabagwa |
+| Parts | ESP32, ultrasonic, 3 LEDs, buzzer | + thermistor, battery sense, MPU6050 tilt, DS1307 RTC, 20x4 LCD, microSD, dry-zero button, relay + strobe, Wi-Fi/MQTT uplink |
+| Docs | [`wiring.md`](../../docs/phase3/wiring.md), [`bom.md`](../../docs/phase3/bom.md) | [`field-node-brief.md`](../../docs/phase3/field-node-brief.md) (components, what the sim can't model, questions) |
+
+## tank_node
+
+One ESP32 + one waterproof ultrasonic over a real drain.
 
 ```
 tank_node/
@@ -81,3 +91,25 @@ Install the Wokwi extension in VS Code, run `idf.py build`, then F1 → **Wokwi:
 | GPIO14 | buzzer + |
 
 Probe: pointing straight down, centred, **≥ 30 cm above the highest expected water**, ≥ 30 cm from a rough wall. Control board stays in the lidded box on the bank.
+
+## field_node
+
+```
+field_node/
+  main/main.c           reading loop, state, LCD, log + queue, JSON line
+  main/i2c_devices.c    LCD 20x4 (PCF8574), DS1307, MPU6050
+  main/sd_log.c         FAT on SPI microSD; append + store-and-forward queue
+  main/uplink.c         Wi-Fi station + MQTT (stand-in for LoRa / GSM)
+  main/idf_component.yml  pulls espressif/mqtt from the component registry (IDF 6.1+)
+  diagram.json          full circuit, labelled
+  wokwi.toml            serial on TCP 4001; microSD filled from sdcard/
+  sdcard/               initial card contents
+```
+
+Pins: Trig 16, Echo 17 (1k/2k divider, switch = cable), I2C SDA 21 / SCL 22, SD SCK 18 / MOSI 23 / MISO 19 / CS 5, battery ADC 34, NTC ADC 35, button 4, relay 13, LEDs 25/26/27, buzzer 14.
+
+Run: `pio run` (or `idf.py build`), then in VS Code F1 → **Wokwi: Select Config File** → `field_node/wokwi.toml` → **Wokwi: Start Simulator**. Things to try: drag the probe distance; flip the cable switch (→ unknown); drag the MPU6050 accelX to 0.3 (→ tilt → unknown); turn the battery pot down (→ `batt_low`); hold the blue button 1 s on a "dry" distance (→ dry zero saved); watch the LCD queue count when the uplink is down and drain when it returns.
+
+Not simulated and therefore on the question list: LoRa/GSM module, solar + charge controller, the probe in spray, enclosure, theft, lightning.
+
+Flash use is ~965 KB. `sdkconfig.defaults` selects the 1.5 MB single-app partition table for real hardware; Wokwi loads the app-only `.bin` with its own table.
