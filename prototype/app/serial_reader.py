@@ -90,7 +90,8 @@ def _handle_line(line):
         return
     status["lines"] += 1
     state_engine.ingest(msg)
-    _forward(line)
+    if status.get("mode") != "fake":
+        _forward(line)
 
 
 def _real_loop(url):
