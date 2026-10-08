@@ -40,7 +40,7 @@
 (async function () {
   const C = TP.COLORS;
   const map = L.map('map', { zoomControl: true, attributionControl: false }).setView([0.330, 32.575], 13);
-  // No tile server: offline policy. Plain dark background; GeoJSON is the map.
+  // No tile server: offline policy. White background; GeoJSON is the map.
   const segs = await TP.getJSON('/data/road_segments.geojson');
   const spots = await TP.getJSON('/data/blackspots.geojson');
 
@@ -63,7 +63,7 @@
   let nodeMarker = null;
   if (nodeSeg) {
     const c = nodeSeg.geometry.coordinates; const m = c[Math.floor(c.length / 2)];
-    nodeMarker = L.circleMarker([m[1], m[0]], { radius: 9, color: '#fff', weight: 2, fillColor: '#3498db', fillOpacity: 1 }).addTo(map);
+    nodeMarker = L.circleMarker([m[1], m[0]], { radius: 9, color: '#1a2330', weight: 2, fillColor: '#3498db', fillOpacity: 1 }).addTo(map);
     nodeMarker.bindTooltip('drain_01', { permanent: true, direction: 'right', offset: [10, 0] });
   }
   map.fitBounds(segLayer.getBounds().pad(0.15));
@@ -118,7 +118,7 @@
     try {
       const r = await TP.post('/api/route', { from: from.value, to: to.value });
       if (routeLayer) routeLayer.remove();
-      routeLayer = L.polyline(r.path.map(p => [p[1], p[0]]), { color: '#fff', weight: 3, dashArray: '6 8', opacity: .9 }).addTo(map);
+      routeLayer = L.polyline(r.path.map(p => [p[1], p[0]]), { color: '#1a2330', weight: 3, dashArray: '6 8', opacity: .9 }).addTo(map);
       document.getElementById('rt-result').textContent = `${(r.distance_m / 1000).toFixed(1)} km via ${r.segments.length} segments`;
     } catch (e) { document.getElementById('rt-result').textContent = e.message; }
   };

@@ -1,6 +1,6 @@
 :root {
-  --bg: #0f1419; --panel: #161c24; --panel2: #1d2530; --line: #2a3442;
-  --text: #e6edf3; --muted: #8b98a5;
+  --bg: #ffffff; --panel: #ffffff; --panel2: #f6f8fb; --line: #e2e6ec;
+  --text: #1a2330; --muted: #5c6770;
   --green: #2ecc71; --yellow: #f1c40f; --red: #e74c3c; --unknown: #7f8c8d; --blue: #3498db;
   --font: system-ui, -apple-system, "Segoe UI", Roboto, Ubuntu, sans-serif;
 }
@@ -57,10 +57,10 @@ button:disabled { opacity: .45; cursor: default; }
 select, input, textarea { background: var(--bg); color: var(--text); border: 1px solid var(--line); border-radius: 8px; padding: 7px 10px; }
 
 /* map */
-#map { flex: 1; background: #0b0f14; }
-.leaflet-container { background: #0b0f14; font-family: var(--font); }
+#map { flex: 1; background: #ffffff; }
+.leaflet-container { background: #ffffff; font-family: var(--font); }
 .leaflet-popup-content-wrapper, .leaflet-popup-tip { background: var(--panel); color: var(--text); }
-.legend { position: absolute; left: 16px; bottom: 16px; z-index: 500; background: rgba(22,28,36,.92); border: 1px solid var(--line); border-radius: 10px; padding: 10px 14px; font-size: 13px; }
+.legend { position: absolute; left: 16px; bottom: 16px; z-index: 500; background: rgba(255,255,255,.96); border: 1px solid var(--line); border-radius: 10px; padding: 10px 14px; font-size: 13px; }
 .legend div { display: flex; align-items: center; gap: 8px; margin: 3px 0; }
 .legend i { width: 22px; height: 5px; border-radius: 3px; display: inline-block; }
 .legend i.pt { width: 10px; height: 10px; border-radius: 50%; }
@@ -81,7 +81,7 @@ select, input, textarea { background: var(--bg); color: var(--text); border: 1px
 .tabs button.active { background: var(--blue); border-color: var(--blue); color: #fff; }
 .job { display: grid; grid-template-columns: 110px 1fr auto; gap: 14px; align-items: center; background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; margin-bottom: 10px; }
 .job.escalated { animation: flash 1s steps(2) infinite; border-color: var(--red); }
-@keyframes flash { 0% { background: var(--panel); } 50% { background: #3b1c1c; } }
+@keyframes flash { 0% { background: var(--panel); } 50% { background: #ffe8e6; } }
 .job .st { font-weight: 800; text-transform: uppercase; font-size: 13px; letter-spacing: .6px; }
 .job .st.open { color: var(--red); } .job .st.acked { color: var(--yellow); } .job .st.en_route, .job .st.on_site { color: var(--blue); } .job .st.closed { color: var(--green); } .job .st.false_alarm { color: var(--muted); }
 .job .title { font-weight: 700; font-size: 16px; }

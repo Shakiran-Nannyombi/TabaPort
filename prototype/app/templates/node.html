@@ -74,7 +74,7 @@
     ctx.fillStyle = 'rgba(241,196,15,.08)'; ctx.fillRect(pad.l, y(th.red_cm), w, y(th.yellow_cm) - y(th.red_cm));
     ctx.fillStyle = 'rgba(231,76,60,.10)'; ctx.fillRect(pad.l, pad.t, w, y(th.red_cm) - pad.t);
     // grid + axis labels
-    ctx.strokeStyle = '#2a3442'; ctx.fillStyle = '#8b98a5'; ctx.font = '12px system-ui'; ctx.textAlign = 'right';
+    ctx.strokeStyle = '#e2e6ec'; ctx.fillStyle = '#5c6770'; ctx.font = '12px system-ui'; ctx.textAlign = 'right';
     const step = maxY > 60 ? 20 : maxY > 30 ? 10 : 5;
     for (let v = 0; v <= maxY; v += step) { ctx.beginPath(); ctx.moveTo(pad.l, y(v)); ctx.lineTo(W - pad.r, y(v)); ctx.stroke(); ctx.fillText(v + '', pad.l - 6, y(v) + 4); }
     ctx.textAlign = 'center';
@@ -82,10 +82,10 @@
     // thresholds
     const hline = (v, col, label) => { ctx.strokeStyle = col; ctx.setLineDash([6, 6]); ctx.beginPath(); ctx.moveTo(pad.l, y(v)); ctx.lineTo(W - pad.r, y(v)); ctx.stroke(); ctx.setLineDash([]); ctx.fillStyle = col; ctx.textAlign = 'left'; ctx.fillText(label, pad.l + 6, y(v) - 4); };
     hline(th.yellow_cm, C.yellow, 'yellow ' + th.yellow_cm + ' cm'); hline(th.red_cm, C.red, 'red ' + th.red_cm + ' cm');
-    if (th.h_road_cm <= maxY) hline(th.h_road_cm, '#fff', 'road edge ' + th.h_road_cm + ' cm');
-    if (!rs.length) { ctx.fillStyle = '#8b98a5'; ctx.textAlign = 'center'; ctx.fillText('waiting for readings…', W / 2, H / 2); return; }
+    if (th.h_road_cm <= maxY) hline(th.h_road_cm, '#1a2330', 'road edge ' + th.h_road_cm + ' cm');
+    if (!rs.length) { ctx.fillStyle = '#5c6770'; ctx.textAlign = 'center'; ctx.fillText('waiting for readings…', W / 2, H / 2); return; }
     // raw (grey)
-    ctx.strokeStyle = '#55606c'; ctx.lineWidth = 1; ctx.beginPath();
+    ctx.strokeStyle = '#9aa3ad'; ctx.lineWidth = 1; ctx.beginPath();
     rs.forEach((r, i) => { const px = x(r.t), py = y(r.raw); i ? ctx.lineTo(px, py) : ctx.moveTo(px, py); }); ctx.stroke();
     // level (blue), broken where gaps > 5 s
     ctx.strokeStyle = '#3498db'; ctx.lineWidth = 2.5; ctx.beginPath();
@@ -93,7 +93,7 @@
     // filtered dots
     ctx.fillStyle = '#e67e22'; rs.filter(r => r.f).forEach(r => { ctx.beginPath(); ctx.arc(x(r.t), y(r.raw), 4, 0, 7); ctx.fill(); });
     // last point
-    const L = rs[rs.length - 1]; ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.arc(x(L.t), y(L.lvl), 4, 0, 7); ctx.fill();
+    const L = rs[rs.length - 1]; ctx.fillStyle = '#1a2330'; ctx.beginPath(); ctx.arc(x(L.t), y(L.lvl), 4, 0, 7); ctx.fill();
   }
 
   async function loadReadings() {
