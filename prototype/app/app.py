@@ -256,6 +256,17 @@ def api_config_set():
     return jsonify(db.all_cfg())
 
 
+@app.post("/api/ingest")
+def api_ingest():
+    """A laptop with the real USB node posts the same JSON line here."""
+    msg = request.get_json(silent=True)
+    if not isinstance(msg, dict) or "raw_cm" not in msg and not msg.get("boot"):
+        return jsonify({"error": "expected a node reading"}), 400
+    serial_reader.note_uplink()
+    reading = state_engine.ingest(msg)
+    return jsonify(reading or {"ok": True})
+
+
 # ---------- dev helpers (only when SERIAL_URL=fake) ----------
 @app.post("/api/dev/fake")
 def api_dev_fake():

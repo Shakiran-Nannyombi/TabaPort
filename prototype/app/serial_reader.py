@@ -12,6 +12,7 @@ import os
 import sys
 import threading
 import time
+import urllib.request
 
 import state_engine
 
@@ -44,6 +45,41 @@ def send(line):
                 status["last_error"] = f"write: {e}"
 
 
+def uplink_base():
+    """Laptop copies each real reading to the public hub. The public hub does not copy back."""
+    if os.environ.get("RENDER"):
+        return None
+    raw = os.environ.get("TABAPORT_UPLINK", "https://tabaport.onrender.com").strip()
+    if raw.lower() in ("", "off", "0", "none"):
+        return None
+    return raw.rstrip("/")
+
+
+def _forward(line):
+    base = uplink_base()
+    if not base:
+        return
+
+    def send():
+        try:
+            req = urllib.request.Request(
+                base + "/api/ingest",
+                data=line.encode(),
+                headers={"Content-Type": "application/json"},
+                method="POST",
+            )
+            urllib.request.urlopen(req, timeout=4)
+            status["uplink_error"] = None
+        except Exception as e:
+            status["uplink_error"] = str(e)
+
+    threading.Thread(target=send, daemon=True).start()
+
+
+def note_uplink():
+    status.update(url="uplink", connected=True, mode="uplink", last_error=None)
+
+
 def _handle_line(line):
     line = line.strip()
     if not line.startswith("{"):
@@ -54,6 +90,7 @@ def _handle_line(line):
         return
     status["lines"] += 1
     state_engine.ingest(msg)
+    _forward(line)
 
 
 def _real_loop(url):
@@ -119,9 +156,10 @@ def _fake_loop():
 
 
 def start():
-    # Render has no USB port. The real ESP32 stays on the laptop.
-    if os.environ.get("RENDER") and not os.environ.get("SERIAL_URL"):
-        os.environ["SERIAL_URL"] = "fake"
+    # The public hub has no USB port. It waits for the laptop to post real readings.
+    if os.environ.get("RENDER"):
+        status.update(url="uplink", connected=False, mode="uplink", last_error=None)
+        return
     url = os.environ.get("SERIAL_URL", "auto")
     status["url"] = url
     status["mode"] = "fake" if url == "fake" else "serial"
