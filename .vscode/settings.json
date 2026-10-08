@@ -1,4 +1,13 @@
 {
   "idf.currentSetup": "/home/dev-kiran/.espressif/v6.0.1/esp-idf",
-  "java.configuration.updateBuildConfiguration": "interactive"
+  "java.configuration.updateBuildConfiguration": "disabled",
+  "java.import.gradle.enabled": false,
+  "java.project.importOnFirstTimeStartup": "disabled",
+  "java.import.exclusions": [
+    "**/node_modules/**",
+    "**/.metadata/**",
+    "**/archetype-resources/**",
+    "**/META-INF/maven/**",
+    "**/prototype/mobile/**"
+  ]
 }

@@ -19,6 +19,8 @@ from gis import router
 HERE = os.path.dirname(os.path.abspath(__file__))
 app = Flask(__name__, static_folder="static", template_folder="templates")
 app.config["JSON_SORT_KEYS"] = False
+app.config["TEMPLATES_AUTO_RELOAD"] = True
+app.jinja_env.auto_reload = True
 
 
 @app.after_request

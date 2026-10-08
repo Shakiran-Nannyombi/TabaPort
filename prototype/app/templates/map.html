@@ -45,13 +45,23 @@
   const spots = await TP.getJSON('/data/blackspots.geojson');
 
   const segLayers = {};
-  const segLayer = L.geoJSON(segs, {
+  const rest = { type: 'FeatureCollection', features: segs.features.filter(f => !f.properties.node_id) };
+  const liveSegs = { type: 'FeatureCollection', features: segs.features.filter(f => f.properties.node_id) };
+  const restLayer = L.geoJSON(rest, {
     style: () => ({ color: C.unknown, weight: 7, opacity: .95, lineCap: 'round' }),
     onEachFeature: (f, l) => {
       segLayers[f.properties.segment_id] = l;
       l.bindPopup(() => popupFor(f.properties));
     }
   }).addTo(map);
+  const liveLayer = L.geoJSON(liveSegs, {
+    style: () => ({ color: C.unknown, weight: 18, opacity: 1, lineCap: 'round' }),
+    onEachFeature: (f, l) => {
+      segLayers[f.properties.segment_id] = l;
+      l.bindPopup(() => popupFor(f.properties));
+    }
+  }).addTo(map);
+  const segLayer = L.featureGroup([restLayer, liveLayer]);
 
   L.geoJSON(spots, {
     pointToLayer: (f, ll) => L.circleMarker(ll, { radius: f.properties.shortlist ? 8 : 5, color: '#9b59b6', weight: f.properties.shortlist ? 3 : 1, fillColor: '#9b59b6', fillOpacity: .5 }),
@@ -66,7 +76,11 @@
     nodeMarker = L.circleMarker([m[1], m[0]], { radius: 9, color: '#1a2330', weight: 2, fillColor: '#3498db', fillOpacity: 1 }).addTo(map);
     nodeMarker.bindTooltip('drain_01', { permanent: true, direction: 'right', offset: [10, 0] });
   }
-  map.fitBounds(segLayer.getBounds().pad(0.15));
+  if (liveLayer.getLayers().length) {
+    map.fitBounds(liveLayer.getBounds().pad(1.2));
+  } else {
+    map.fitBounds(segLayer.getBounds().pad(0.15));
+  }
 
   let states = {};
   function popupFor(p) {
@@ -86,13 +100,13 @@
     segs.features.forEach(f => {
       const p = f.properties; const s = states[p.segment_id] || { state: 'unknown' };
       const l = segLayers[p.segment_id];
-      const live = s.state === 'green' || s.state === 'yellow' || s.state === 'red';
+      const live = p.node_id && (s.state === 'green' || s.state === 'yellow' || s.state === 'red');
       if (l) {
         l.setStyle({
           color: C[s.state] || C.unknown,
-          weight: live ? 12 : 6,
+          weight: live ? 18 : 6,
           opacity: 1,
-          dashArray: live ? '0' : '8 10',
+          dashArray: live ? null : '8 10',
         });
         if (live) l.bringToFront();
       }

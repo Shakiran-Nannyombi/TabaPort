@@ -44,12 +44,21 @@ class _MapScreenState extends State<MapScreen> {
     if (!_mapReady || _segs == null) return;
     final pts = <LatLng>[];
     for (final f in (_segs?['features'] as List?) ?? []) {
+      final props = Map<String, dynamic>.from(f['properties'] as Map);
+      if (props['node_id'] == null) continue;
       for (final c in f['geometry']['coordinates'] as List) {
         pts.add(LatLng((c[1] as num).toDouble(), (c[0] as num).toDouble()));
       }
     }
+    if (pts.length < 2) {
+      for (final f in (_segs?['features'] as List?) ?? []) {
+        for (final c in f['geometry']['coordinates'] as List) {
+          pts.add(LatLng((c[1] as num).toDouble(), (c[0] as num).toDouble()));
+        }
+      }
+    }
     if (pts.length < 2) return;
-    _map.fitCamera(CameraFit.bounds(bounds: LatLngBounds.fromPoints(pts), padding: const EdgeInsets.all(28)));
+    _map.fitCamera(CameraFit.bounds(bounds: LatLngBounds.fromPoints(pts), padding: const EdgeInsets.all(48)));
   }
 
   Map<String, String> get _states {
@@ -103,12 +112,13 @@ class _MapScreenState extends State<MapScreen> {
           .map((c) => LatLng((c[1] as num).toDouble(), (c[0] as num).toDouble()))
           .toList();
       final st = _states[id] ?? 'unknown';
+      final live = props['node_id'] != null && (st == 'green' || st == 'yellow' || st == 'red');
       lines.add(Polyline(
         points: coords,
         color: stateColor(st),
-        strokeWidth: st == 'red' ? 8 : 6,
+        strokeWidth: live ? 14 : (st == 'red' ? 8 : 6),
         borderColor: const Color(0xFF1A2330),
-        borderStrokeWidth: 2,
+        borderStrokeWidth: live ? 3 : 2,
         pattern: st == 'unknown' ? const StrokePattern.dotted() : const StrokePattern.solid(),
       ));
     }
