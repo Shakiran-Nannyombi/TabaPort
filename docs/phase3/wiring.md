@@ -2,26 +2,43 @@
 
 ESP32 DevKit + JSN-SR04T + 3 LEDs + buzzer on a breadboard, in a lidded box on the drain bank. Probe on a plank across the drain. USB-C cable to the laptop. Nothing else.
 
+Print [tank-node-wiring.png](tank-node-wiring.png) and tick each jumper off as you put it in.
+
+![Tank node wiring](tank-node-wiring.png)
+
 ## 1. Breadboard wiring
 
-```
-JSN-SR04T board          ESP32 DevKit (38-pin)
-  +5V  ───────────────── VIN   (5 V from USB)
-  GND  ───────────────── GND
-  Trig ───────────────── GPIO5
-  Echo ──┬─[ 1 kΩ ]───── GPIO18
-         │
-       [ 2 kΩ ]
-         │
-        GND
+Do it in this order. USB **unplugged**.
 
-GPIO25 ─[220 Ω]─►|─ GND   green LED   (long leg to resistor)
-GPIO26 ─[220 Ω]─►|─ GND   yellow LED
-GPIO27 ─[220 Ω]─►|─ GND   red LED
-GPIO14 ─────────( + buzzer − )── GND
-```
+**A. Power and trigger (4 jumpers)**
 
-Why the divider: the JSN-SR04T Echo pin is 5 V; ESP32 pins are 3.3 V. 1 kΩ + 2 kΩ gives 3.3 V. Without it you will cook GPIO18 slowly. If you only have 1 kΩ resistors, use one in series and two in series to ground.
+| Colour | From (ESP32) | To (JSN-SR04T driver) |
+|---|---|---|
+| Red | **VIN** (5 V from USB) | VCC |
+| Black | GND | GND |
+| Blue | GPIO5 (labelled D5 / IO5) | Trig |
+| Orange | GPIO18, but only after the divider in B | Echo |
+
+Do **not** put the sensor on 3V3. The JSN-SR04T will not fire, and Echo is still 5 V.
+
+**B. Echo divider (the one that protects GPIO18)**
+
+Echo is 5 V. ESP32 pins are 3.3 V. 1 kΩ then 2 kΩ to ground gives 3.3 V at the middle.
+
+1. Orange jumper from **Echo** into one end of a **1 kΩ** (brown-black-red).
+2. Other end of that 1 kΩ shares a breadboard row with a jumper to **GPIO18**.
+3. From that **same row**, a **2 kΩ** (red-black-red) goes to the GND rail.
+
+GPIO18 must sit in the middle of the two resistors. If you only have 1 kΩ parts, use two of them in series for the 2 kΩ to ground.
+
+**C. LEDs and buzzer (each on its own wire, not chained)**
+
+| ESP32 pin | Resistor | Component | Then | Orientation |
+|---|---|---|---|---|
+| GPIO25 | 220 Ω (red-red-brown) | green LED | GND | long leg toward the 220 Ω |
+| GPIO26 | 220 Ω | yellow LED | GND | long leg toward the 220 Ω |
+| GPIO27 | 220 Ω | red LED | GND | short / flat side to GND |
+| GPIO14 | none | buzzer | GND | + or long leg to GPIO14 |
 
 Checks before plugging in the laptop:
 
