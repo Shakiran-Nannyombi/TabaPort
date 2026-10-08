@@ -1,3 +1,5 @@
 flask>=3.0
 pyserial>=3.5
 networkx>=3.0
+uvicorn>=0.32
+asgiref>=3.8

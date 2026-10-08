@@ -278,11 +278,26 @@ def api_dev_reset():
     return jsonify({"ok": True})
 
 
-def main():
+_booted = False
+
+
+def boot():
+    """Start the database, watchdog, and sensor thread once per process.
+
+    `python app.py` calls this, and so does Render's `uvicorn main:app`.
+    """
+    global _booted
+    if _booted:
+        return
+    _booted = True
     db.connect()
     seed_segments()
     state_engine.start_watchdog()
     serial_reader.start()
+
+
+def main():
+    boot()
     # 0.0.0.0 is required on Render: the proxy does not connect to 127.0.0.1.
     host = os.environ.get("HOST", "0.0.0.0")
     port = int(os.environ.get("PORT", "5000"))
