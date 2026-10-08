@@ -20,6 +20,20 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 app = Flask(__name__, static_folder="static", template_folder="templates")
 app.config["JSON_SORT_KEYS"] = False
 
+
+@app.after_request
+def _cors(resp):
+    """Flutter (and later phones on the same Wi-Fi) call this API from another origin."""
+    resp.headers["Access-Control-Allow-Origin"] = "*"
+    resp.headers["Access-Control-Allow-Headers"] = "Content-Type"
+    resp.headers["Access-Control-Allow-Methods"] = "GET, POST, OPTIONS"
+    return resp
+
+
+@app.route("/api/<path:_any>", methods=["OPTIONS"])
+def _cors_preflight(_any):
+    return ("", 204)
+
 _segments_geojson = None
 
 
