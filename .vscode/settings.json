@@ -1,3 +1,4 @@
 {
-    "idf.currentSetup": "/home/dev-kiran/.espressif/v6.0.1/esp-idf"
+  "idf.currentSetup": "/home/dev-kiran/.espressif/v6.0.1/esp-idf",
+  "java.configuration.updateBuildConfiguration": "interactive"
 }
