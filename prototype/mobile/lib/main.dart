@@ -141,7 +141,7 @@ class _ShellState extends State<Shell> {
     final open = (_state?['jobs'] as Map? ?? {})['open'] ?? 0;
 
     final pages = [
-      MapScreen(api: _api, state: _state),
+      MapScreen(api: _api, state: _state, onChanged: _tick),
       JobsScreen(key: ValueKey(_url), api: _api),
       NodeScreen(api: _api, state: _state),
       SettingsScreen(api: _api, hubUrl: _url, onHubUrl: _setUrl),

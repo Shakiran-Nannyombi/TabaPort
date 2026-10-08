@@ -6,9 +6,10 @@ import '../api/hub_api.dart';
 import '../theme.dart';
 
 class MapScreen extends StatefulWidget {
-  const MapScreen({super.key, required this.api, required this.state});
+  const MapScreen({super.key, required this.api, required this.state, this.onChanged});
   final HubApi api;
   final Map<String, dynamic>? state;
+  final Future<void> Function()? onChanged;
 
   @override
   State<MapScreen> createState() => _MapScreenState();
@@ -114,6 +115,34 @@ class _MapScreenState extends State<MapScreen> {
     return lines;
   }
 
+  Future<void> _log() async {
+    final t = _report.text.trim();
+    if (t.isEmpty) {
+      setState(() => _note = 'Type a place first. Example: Kalerwe flooded');
+      return;
+    }
+    try {
+      final r = await widget.api.report(text: t);
+      final match = Map<String, dynamic>.from(r['match'] as Map? ?? {});
+      final name = match['name'] as String?;
+      _report.clear();
+      FocusManager.instance.primaryFocus?.unfocus();
+      if (name == null) {
+        setState(() => _note = 'Saved, but that text did not match a known road.');
+        return;
+      }
+      setState(() => _note = '$name is now yellow');
+      final lat = match['lat'];
+      final lon = match['lon'];
+      if (_mapReady && lat is num && lon is num) {
+        _map.move(LatLng(lat.toDouble(), lon.toDouble()), 15);
+      }
+      await widget.onChanged?.call();
+    } catch (e) {
+      setState(() => _note = e.toString());
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -134,7 +163,7 @@ class _MapScreenState extends State<MapScreen> {
                 urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
                 userAgentPackageName: 'ug.tabaport.tabaport_mobile',
               ),
-              PolylineLayer(polylines: _lines),
+              PolylineLayer(key: ValueKey(_states.entries.map((e) => '${e.key}=${e.value}').join()), polylines: _lines),
               MarkerLayer(markers: _markers),
               const RichAttributionWidget(
                 attributions: [
@@ -159,12 +188,19 @@ class _MapScreenState extends State<MapScreen> {
                   _chip('unknown', kUnknown),
                 ],
               ),
+              if (_note.isNotEmpty)
+                Padding(
+                  padding: const EdgeInsets.only(top: 6, bottom: 4),
+                  child: Text(_note, style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 13)),
+                ),
               const SizedBox(height: 8),
               Row(
                 children: [
                   Expanded(
                     child: TextField(
                       controller: _report,
+                      textInputAction: TextInputAction.send,
+                      onSubmitted: (_) => _log(),
                       decoration: const InputDecoration(
                         hintText: 'Field report e.g. Kalerwe mkt flooded',
                         isDense: true,
@@ -173,26 +209,11 @@ class _MapScreenState extends State<MapScreen> {
                   ),
                   const SizedBox(width: 8),
                   FilledButton(
-                    onPressed: () async {
-                      final t = _report.text.trim();
-                      if (t.isEmpty) return;
-                      try {
-                        await widget.api.report(text: t);
-                        _report.clear();
-                        setState(() => _note = 'logged');
-                      } catch (e) {
-                        setState(() => _note = e.toString());
-                      }
-                    },
+                    onPressed: _log,
                     child: const Text('Log'),
                   ),
                 ],
               ),
-              if (_note.isNotEmpty)
-                Padding(
-                  padding: const EdgeInsets.only(top: 6),
-                  child: Text(_note, style: const TextStyle(color: Colors.black54, fontSize: 12)),
-                ),
             ],
           ),
         ),

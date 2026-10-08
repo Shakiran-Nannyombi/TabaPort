@@ -68,8 +68,8 @@ class HubApi {
     await _post('/api/jobs/$id/$action', body);
   }
 
-  Future<void> report({required String text, String type = 'flooding'}) async {
-    await _post('/api/reports', {'text': text, 'report_type': type});
+  Future<Map<String, dynamic>> report({required String text, String type = 'flooding'}) async {
+    return Map<String, dynamic>.from(await _post('/api/reports', {'text': text, 'report_type': type}));
   }
 
   Future<void> saveConfig(Map<String, String> body) async {
