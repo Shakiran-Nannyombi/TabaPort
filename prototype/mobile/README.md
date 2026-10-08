@@ -90,7 +90,7 @@ Find the laptop IP (`ip addr` or `hostname -I`), then:
 
 ```bash
 export PATH="$HOME/flutter/bin:$PATH"
-cd prototype/app/mobile
+cd prototype/mobile
 flutter pub get
 flutter run -d linux          # this computer, hub URL http://127.0.0.1:5000
 flutter run                   # pick a phone; set hub URL to http://192.168.x.x:5000
@@ -104,7 +104,7 @@ The phone must be on the **same Wi-Fi as the laptop** (so it can reach the hub) 
 
 1. [Google Cloud Console](https://console.cloud.google.com/) → create a project → enable **Maps SDK for Android**.
 2. Create an API key. Restrict it to Android apps, package name `ug.tabaport.tabaport_mobile`.
-3. Add this line to `prototype/app/mobile/android/local.properties` (that file is not committed):
+3. Add this line to `prototype/mobile/android/local.properties` (that file is not committed):
 
 ```
 MAPS_API_KEY=your_key_here
@@ -120,7 +120,7 @@ Without that line the map is blank grey. The coloured drain lines still come fro
 
 ```bash
 export PATH="$HOME/flutter/bin:$PATH"
-cd prototype/app/mobile
+cd prototype/mobile
 flutter devices          # your phone should be listed
 flutter run              # installs and opens TabaPort; leave this terminal running
 ```

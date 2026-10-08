@@ -27,7 +27,7 @@ SERIAL_URL=fake ../../.venv/bin/python app.py       # no hardware; Dev controls 
 
 Open http://localhost:5000. Wi-Fi off during filming; nothing here needs it.
 
-The Flutter phone app lives in [`mobile/`](mobile/README.md). It uses this same REST API. To let a phone on the LAN in:
+The Flutter phone app lives in [`../mobile/`](../mobile/README.md). It uses this same REST API. On Render, set the root directory to `prototype/app`, the start command to `python app.py` (not uvicorn), and leave `SERIAL_URL` unset so the cloud copy uses the built-in fake node. To let a phone on the LAN in:
 
 ```bash
 HOST=0.0.0.0 ../../.venv/bin/python app.py

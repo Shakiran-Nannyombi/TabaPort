@@ -119,6 +119,9 @@ def _fake_loop():
 
 
 def start():
+    # Render has no USB port. The real ESP32 stays on the laptop.
+    if os.environ.get("RENDER") and not os.environ.get("SERIAL_URL"):
+        os.environ["SERIAL_URL"] = "fake"
     url = os.environ.get("SERIAL_URL", "auto")
     status["url"] = url
     status["mode"] = "fake" if url == "fake" else "serial"

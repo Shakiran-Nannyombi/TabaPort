@@ -20,12 +20,8 @@ class HubConfig {
   /// Android emulator's alias for the host machine.
   static const androidEmulator = 'http://10.0.2.2:5000';
 
-  /// This laptop on the lab Wi-Fi. A physical phone cannot use 127.0.0.1.
-  static const lan = 'http://10.10.152.131:5000';
-
-  /// Public address for the hub while it is running on this laptop.
-  /// The quick tunnel URL changes if that process is restarted.
-  static const publicHub = 'https://cited-nylon-pittsburgh-throws.trycloudflare.com';
+  /// This laptop on the phone hotspot. A physical phone cannot use 127.0.0.1.
+  static const lan = 'http://192.168.43.31:5000';
 
   static bool get _onPhone => !kIsWeb && Platform.isAndroid;
 
@@ -34,16 +30,15 @@ class HubConfig {
     return saved.contains('127.0.0.1') ||
         saved.contains('localhost') ||
         saved.contains('10.0.2.2') ||
-        saved.contains('10.10.');
+        saved.contains('10.10.') ||
+        saved.contains('trycloudflare.com');
   }
 
   static Future<String> load() async {
     final p = await SharedPreferences.getInstance();
     final saved = p.getString(_key);
-    if (_onPhone && (_stale(saved) || (saved != null && saved.contains('trycloudflare.com') && saved != publicHub))) {
-      return publicHub;
-    }
-    return saved ?? (_onPhone ? publicHub : local);
+    if (_onPhone && _stale(saved)) return lan;
+    return saved ?? (_onPhone ? lan : local);
   }
 
   static Future<void> save(String url) async {

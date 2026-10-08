@@ -84,23 +84,23 @@ class _SettingsScreenState extends State<SettingsScreen> {
         const Text('Hub address', style: TextStyle(fontWeight: FontWeight.w700)),
         const SizedBox(height: 6),
         const Text(
-          'The phone uses the public hub address, so it does not need this laptop\'s Wi-Fi address. '
-          'The hub process still runs on the laptop.',
+          'The laptop is on this phone\'s hotspot. Hub address: http://192.168.43.31:5000. '
+          'The red bar means the phone cannot reach that address.',
           style: TextStyle(color: Colors.black54, fontSize: 13),
         ),
         const SizedBox(height: 8),
         TextField(
           controller: _url,
           decoration: const InputDecoration(
-            labelText: 'https://….trycloudflare.com',
+            labelText: 'http://192.168.43.31:5000',
             border: OutlineInputBorder(),
           ),
         ),
         const SizedBox(height: 8),
         Wrap(spacing: 8, children: [
           OutlinedButton(
-            onPressed: () => _url.text = HubConfig.publicHub,
-            child: const Text('Public hub'),
+            onPressed: () => _url.text = HubConfig.lan,
+            child: const Text('This hotspot'),
           ),
           OutlinedButton(
             onPressed: () => _url.text = HubConfig.local,

@@ -283,7 +283,8 @@ def main():
     seed_segments()
     state_engine.start_watchdog()
     serial_reader.start()
-    host = os.environ.get("HOST", "127.0.0.1")
+    # 0.0.0.0 is required on Render: the proxy does not connect to 127.0.0.1.
+    host = os.environ.get("HOST", "0.0.0.0")
     port = int(os.environ.get("PORT", "5000"))
     print(f"TabaPort hub on http://{host}:{port}  (serial: {serial_reader.status['url']})")
     app.run(host=host, port=port, debug=False, threaded=True, use_reloader=False)
