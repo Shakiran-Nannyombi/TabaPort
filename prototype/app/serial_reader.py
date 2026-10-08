@@ -112,10 +112,14 @@ def _real_loop(url):
             time.sleep(0.5)
             send(state_engine.cfg_line("drain_01"))
             buf = b""
+            last_byte = time.monotonic()
             while True:
                 chunk = port.read(256)
                 if not chunk:
+                    if time.monotonic() - last_byte > 20:
+                        raise TimeoutError("no readings for 20s")
                     continue
+                last_byte = time.monotonic()
                 buf += chunk
                 while b"\n" in buf:
                     raw, buf = buf.split(b"\n", 1)

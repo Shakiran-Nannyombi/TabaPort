@@ -1,0 +1,8 @@
+If:
+  PathMatch: .*\.chip\.c
+CompileFlags:
+  CompilationDatabase: None
+  Add:
+    - -std=c17
+    - -I/home/dev-kiran/Desktop/Projects/TabaPort/prototype/sysmatic/tank_node
+    - -Wno-unknown-attributes

@@ -35,6 +35,7 @@
 #define PIN_YELLOW GPIO_NUM_26
 #define PIN_RED    GPIO_NUM_27
 #define PIN_BUZZER GPIO_NUM_14
+#define PIN_SCENARIO GPIO_NUM_4   /* Wokwi switch only; real board leaves it pulled down */
 
 #define NODE_ID    "drain_01"
 #define UART       UART_NUM_0
@@ -203,6 +204,21 @@ static void handle_serial_config(void)
     }
 }
 
+/* Wokwi "play all cases" switch. Off (or absent on the real board) uses the probe. */
+static int scenario_phase(void)
+{
+    int sec = (int)(esp_timer_get_time() / 1000000) % 44;
+    if (sec < 8)  return 0;   /* green, 8 s  */
+    if (sec < 16) return 1;   /* yellow, 8 s */
+    if (sec < 24) return 2;   /* red, 8 s    */
+    return 3;                 /* quiet 20 s: the road turns grey after 10 s */
+}
+
+static bool scenario_on(void)
+{
+    return gpio_get_level(PIN_SCENARIO) == 1;
+}
+
 static void gpio_init(void)
 {
     gpio_config_t outs = {
@@ -222,6 +238,14 @@ static void gpio_init(void)
     };
     gpio_config(&in);
     gpio_set_level(PIN_TRIG, 0);
+    gpio_config_t scene = {
+        .pin_bit_mask = (1ULL << PIN_SCENARIO),
+        .mode         = GPIO_MODE_INPUT,
+        .pull_up_en   = GPIO_PULLUP_DISABLE,
+        .pull_down_en = GPIO_PULLDOWN_ENABLE,
+        .intr_type    = GPIO_INTR_DISABLE,
+    };
+    gpio_config(&scene);
 }
 
 static void uart_init(void)
@@ -257,7 +281,22 @@ void app_main(void)
     for (;;) {
         handle_serial_config();
 
-        float raw = read_raw_cm();
+        float raw;
+        bool scripted = false;
+        if (scenario_on()) {
+            int phase = scenario_phase();
+            if (phase == 3) {
+                set_leds(false, false, false);
+                out("{\"node_id\":\"%s\",\"raw_cm\":null,\"level_cm\":null,\"filtered\":false,"
+                    "\"state\":\"unknown\",\"ok\":false,\"scenario\":\"quiet\"}\n", NODE_ID);
+                vTaskDelayUntil(&last_wake, pdMS_TO_TICKS(PERIOD_MS));
+                continue;
+            }
+            raw = (phase == 0) ? 48.0f : (phase == 1) ? 40.0f : 30.0f;
+            scripted = true;
+        } else {
+            raw = read_raw_cm();
+        }
 
         if (raw < 0.0f) {
             miss_count++;
@@ -272,7 +311,7 @@ void app_main(void)
             miss_count = 0;
             push_window(raw);
             float med = median_of_window();
-            bool filtered = fabsf(raw - med) > SPIKE_CM;   /* debris spike -> use median */
+            bool filtered = !scripted && fabsf(raw - med) > SPIKE_CM;   /* debris spike -> use median */
             float use_dist = filtered ? med : raw;
 
             float level = h_sensor_cm - use_dist;

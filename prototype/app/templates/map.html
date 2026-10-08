@@ -86,7 +86,16 @@
     segs.features.forEach(f => {
       const p = f.properties; const s = states[p.segment_id] || { state: 'unknown' };
       const l = segLayers[p.segment_id];
-      if (l) l.setStyle({ color: C[s.state] || C.unknown, weight: s.state === 'red' ? 10 : 7, dashArray: s.state === 'unknown' ? '8 10' : null });
+      const live = s.state === 'green' || s.state === 'yellow' || s.state === 'red';
+      if (l) {
+        l.setStyle({
+          color: C[s.state] || C.unknown,
+          weight: live ? 12 : 6,
+          opacity: 1,
+          dashArray: live ? '0' : '8 10',
+        });
+        if (live) l.bringToFront();
+      }
       const row = document.createElement('div'); row.className = 'seg-row';
       row.innerHTML = `<span class="sw ${s.state}"></span><span class="n">${p.name}${p.node_id ? ' <small class="muted">· sensor</small>' : ''}</span><span class="s">${s.state}</span>`;
       row.onclick = () => { map.fitBounds(l.getBounds().pad(0.5)); l.openPopup(); };

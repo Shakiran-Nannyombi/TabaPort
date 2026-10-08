@@ -1,0 +1,15 @@
+{
+  "name": "JSN-SR04T",
+  "author": "TabaPort",
+  "pins": ["VCC", "TRIG", "ECHO", "GND"],
+  "controls": [
+    {
+      "id": "distance",
+      "label": "Air gap (cm)",
+      "type": "range",
+      "min": 2,
+      "max": 450,
+      "step": 1
+    }
+  ]
+}
