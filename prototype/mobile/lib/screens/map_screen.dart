@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:flutter_map/flutter_map.dart';
+import 'package:latlong2/latlong.dart';
 
 import '../api/hub_api.dart';
 import '../theme.dart';
@@ -16,15 +17,19 @@ class MapScreen extends StatefulWidget {
 class _MapScreenState extends State<MapScreen> {
   Map<String, dynamic>? _segs;
   final _report = TextEditingController();
+  final _map = MapController();
   String _note = '';
+  bool _mapReady = false;
 
-  static const _kampala = CameraPosition(target: LatLng(0.330, 32.575), zoom: 12.2);
+  static final _kampala = LatLng(0.330, 32.575);
 
   @override
   void initState() {
     super.initState();
     widget.api.geojson('road_segments.geojson').then((g) {
-      if (mounted) setState(() => _segs = g);
+      if (!mounted) return;
+      setState(() => _segs = g);
+      _fit();
     }).catchError((_) {});
   }
 
@@ -32,6 +37,18 @@ class _MapScreenState extends State<MapScreen> {
   void dispose() {
     _report.dispose();
     super.dispose();
+  }
+
+  void _fit() {
+    if (!_mapReady || _segs == null) return;
+    final pts = <LatLng>[];
+    for (final f in (_segs?['features'] as List?) ?? []) {
+      for (final c in f['geometry']['coordinates'] as List) {
+        pts.add(LatLng((c[1] as num).toDouble(), (c[0] as num).toDouble()));
+      }
+    }
+    if (pts.length < 2) return;
+    _map.fitCamera(CameraFit.bounds(bounds: LatLngBounds.fromPoints(pts), padding: const EdgeInsets.all(28)));
   }
 
   Map<String, String> get _states {
@@ -42,10 +59,10 @@ class _MapScreenState extends State<MapScreen> {
     return out;
   }
 
-  Set<Marker> get _markers {
+  List<Marker> get _markers {
     final features = (_segs?['features'] as List?) ?? [];
     final nodes = Map<String, dynamic>.from(widget.state?['nodes'] as Map? ?? {});
-    final markers = <Marker>{};
+    final markers = <Marker>[];
     for (final f in features) {
       final props = Map<String, dynamic>.from(f['properties'] as Map);
       final nodeId = props['node_id'];
@@ -55,35 +72,29 @@ class _MapScreenState extends State<MapScreen> {
       final n = Map<String, dynamic>.from(nodes[nodeId] as Map? ?? {});
       final st = n['state'] as String? ?? _states[props['segment_id'] as String] ?? 'unknown';
       final level = n['level_cm'];
+      final label = level == null ? '$nodeId · $st' : '$nodeId · $st · ${(level as num).toStringAsFixed(1)} cm';
       markers.add(Marker(
-        markerId: MarkerId('$nodeId'),
-        position: LatLng((mid[1] as num).toDouble(), (mid[0] as num).toDouble()),
-        infoWindow: InfoWindow(
-          title: '$nodeId · $st',
-          snippet: level == null ? 'no live reading' : '${(level as num).toStringAsFixed(1)} cm water',
+        point: LatLng((mid[1] as num).toDouble(), (mid[0] as num).toDouble()),
+        width: 22,
+        height: 22,
+        child: Tooltip(
+          message: label,
+          child: Container(
+            decoration: BoxDecoration(
+              color: stateColor(st),
+              shape: BoxShape.circle,
+              border: Border.all(color: const Color(0xFF1A2330), width: 2),
+            ),
+          ),
         ),
-        icon: BitmapDescriptor.defaultMarkerWithHue(_hue(st)),
       ));
     }
     return markers;
   }
 
-  double _hue(String st) {
-    switch (st) {
-      case 'green':
-        return BitmapDescriptor.hueGreen;
-      case 'yellow':
-        return BitmapDescriptor.hueYellow;
-      case 'red':
-        return BitmapDescriptor.hueRed;
-      default:
-        return BitmapDescriptor.hueAzure;
-    }
-  }
-
-  Set<Polyline> get _lines {
+  List<Polyline> get _lines {
     final features = (_segs?['features'] as List?) ?? [];
-    final lines = <Polyline>{};
+    final lines = <Polyline>[];
     for (final f in features) {
       final props = Map<String, dynamic>.from(f['properties'] as Map);
       final id = props['segment_id'] as String;
@@ -92,10 +103,12 @@ class _MapScreenState extends State<MapScreen> {
           .toList();
       final st = _states[id] ?? 'unknown';
       lines.add(Polyline(
-        polylineId: PolylineId(id),
         points: coords,
         color: stateColor(st),
-        width: st == 'red' ? 8 : 6,
+        strokeWidth: st == 'red' ? 8 : 6,
+        borderColor: const Color(0xFF1A2330),
+        borderStrokeWidth: 2,
+        pattern: st == 'unknown' ? const StrokePattern.dotted() : const StrokePattern.solid(),
       ));
     }
     return lines;
@@ -106,13 +119,29 @@ class _MapScreenState extends State<MapScreen> {
     return Column(
       children: [
         Expanded(
-          child: GoogleMap(
-            initialCameraPosition: _kampala,
-            polylines: _lines,
-            markers: _markers,
-            myLocationButtonEnabled: false,
-            zoomControlsEnabled: true,
-            mapToolbarEnabled: false,
+          child: FlutterMap(
+            mapController: _map,
+            options: MapOptions(
+              initialCenter: _kampala,
+              initialZoom: 12.2,
+              onMapReady: () {
+                _mapReady = true;
+                _fit();
+              },
+            ),
+            children: [
+              TileLayer(
+                urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                userAgentPackageName: 'ug.tabaport.tabaport_mobile',
+              ),
+              PolylineLayer(polylines: _lines),
+              MarkerLayer(markers: _markers),
+              const RichAttributionWidget(
+                attributions: [
+                  TextSourceAttribution('OpenStreetMap contributors'),
+                ],
+              ),
+            ],
           ),
         ),
         Container(

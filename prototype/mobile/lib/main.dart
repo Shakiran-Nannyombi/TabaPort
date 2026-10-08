@@ -38,14 +38,38 @@ class _Opening extends StatefulWidget {
   State<_Opening> createState() => _OpeningState();
 }
 
-class _OpeningState extends State<_Opening> {
-  bool _entered = false;
+class _OpeningState extends State<_Opening> with WidgetsBindingObserver {
+  bool _showIntro = true;
+  bool _backgrounded = false;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.paused || state == AppLifecycleState.hidden) {
+      _backgrounded = true;
+    }
+    if (state == AppLifecycleState.resumed && _backgrounded && mounted) {
+      _backgrounded = false;
+      setState(() => _showIntro = true);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    if (_entered) return const Shell();
+    if (!_showIntro) return const Shell();
     return IntroScreen(onDone: () {
-      if (mounted) setState(() => _entered = true);
+      if (mounted) setState(() => _showIntro = false);
     });
   }
 }
@@ -85,15 +109,6 @@ class _ShellState extends State<Shell> {
     super.dispose();
   }
 
-  Future<void> _tick() async {
-    try {
-      final s = await _api.state();
-      if (mounted) setState(() { _state = s; _err = null; });
-    } catch (e) {
-      if (mounted) setState(() => _err = e.toString());
-    }
-  }
-
   Future<void> _setUrl(String url) async {
     await HubConfig.save(url);
     setState(() {
@@ -101,6 +116,15 @@ class _ShellState extends State<Shell> {
       _api = HubApi(_url);
     });
     await _tick();
+  }
+
+  Future<void> _tick() async {
+    try {
+      final s = await _api.state();
+      if (mounted) setState(() { _state = s; _err = null; });
+    } catch (e) {
+      if (mounted) setState(() => _err = e.toString());
+    }
   }
 
   @override

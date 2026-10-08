@@ -42,7 +42,7 @@ So: USB is the sensor-to-hub link. Wi-Fi is the hub-to-phone link now, and later
 - Map of road segments coloured green / yellow / red / unknown (GeoJSON from the hub, no public tile server)
 - Job list: assign, ack, en route, on site, close, false alarm
 - Live node: depth, rise rate, serial status of the laptop
-- Settings: hub URL, H_sensor / H_road, Joel's 50 % / 80 % thresholds (saved on the hub, which still pushes `CFG` to the ESP32 over USB)
+- Settings: hub address and the drain calibration (50 % / 80 %). The long hub config list stays on the laptop.
 - Field report typed on the phone, gazetteer match on the hub
 
 **Not in this app (stays on the laptop / node)**
@@ -59,7 +59,7 @@ So: USB is the sensor-to-hub link. Wi-Fi is the hub-to-phone link now, and later
 | M-02 | Map is Google Maps. Road segments from `GET /data/road_segments.geojson` are drawn on top and coloured from `road_segment_state`. |
 | M-03 | Jobs from `GET /api/jobs`. Actions `POST /api/jobs/{id}/{assign,ack,en_route,on_site,close,false_alarm}`. Closing a job must not turn the segment green. |
 | M-04 | Live node shows `level_cm`, `below_road_cm`, `rise_rate`, filter flag, and whether the **laptop** still has USB. |
-| M-05 | Settings stores the hub base URL (LAN IP). Android emulator default `http://10.0.2.2:5000`. |
+| M-05 | The phone hub address is fixed to `https://tabaport.onrender.com`. |
 | M-06 | Calibration POST `/api/config` with `h_sensor_cm.drain_01`, `h_road_cm.drain_01`, `yellow_cm.drain_01`, `red_cm.drain_01`. Hub pushes `CFG` over USB. |
 | M-07 | Field report POST `/api/reports`. Hub never marks red from a human report alone. |
 | M-08 | If the hub is unreachable, show an error. Do not invent green. |
@@ -93,12 +93,12 @@ export PATH="$HOME/flutter/bin:$PATH"
 cd prototype/mobile
 flutter pub get
 flutter run -d linux          # this computer, hub URL http://127.0.0.1:5000
-flutter run                   # pick a phone; set hub URL to http://192.168.x.x:5000
+flutter run                   # phone uses https://tabaport.onrender.com
 ```
 
-On the phone: **Settings → hub address → Save URL**. Linux desktop can stay on `http://127.0.0.1:5000`. Android emulator uses `http://10.0.2.2:5000`.
+On the phone: **Settings** can change the hub address. It starts at `https://tabaport.onrender.com`. Linux desktop can stay on `http://127.0.0.1:5000`. Android emulator uses `http://10.0.2.2:5000`.
 
-The phone must be on the **same Wi-Fi as the laptop** (so it can reach the hub) and that network must have **internet** (so Google Maps tiles load).
+The phone needs internet to reach `https://tabaport.onrender.com` and to load Google Maps tiles.
 
 ## Google Maps key (once)
 
@@ -141,7 +141,7 @@ Google Maps does not run on the Linux desktop build. Use the phone.
 ```
 lib/
   main.dart              shell, 2 s poll, four tabs
-  hub_config.dart        saved hub base URL
+  hub_config.dart        hub address, Render by default on the phone
   api/hub_api.dart       REST client for the SRS section 7 API
   theme.dart             green / yellow / red / unknown
   screens/map_screen.dart

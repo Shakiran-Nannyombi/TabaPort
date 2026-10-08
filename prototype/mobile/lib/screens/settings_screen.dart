@@ -22,39 +22,24 @@ class _SettingsScreenState extends State<SettingsScreen> {
   late final TextEditingController _url;
   final _depth = TextEditingController(text: '60');
   final _sensor = TextEditingController(text: '50');
-  final Map<String, TextEditingController> _cfg = {};
   String _msg = '';
-  String? _cfgError;
 
   @override
   void initState() {
     super.initState();
     _url = TextEditingController(text: widget.hubUrl);
-    _loadConfig();
+    _loadCalibration();
   }
 
-  Future<void> _loadConfig() async {
+  Future<void> _loadCalibration() async {
     try {
       final raw = await widget.api.config();
       if (!mounted) return;
       setState(() {
-        _cfgError = null;
-        for (final e in raw.entries) {
-          final key = e.key.toString();
-          final value = e.value.toString();
-          final existing = _cfg[key];
-          if (existing == null) {
-            _cfg[key] = TextEditingController(text: value);
-          } else {
-            existing.text = value;
-          }
-        }
         _depth.text = raw['h_road_cm.drain_01']?.toString() ?? _depth.text;
         _sensor.text = raw['h_sensor_cm.drain_01']?.toString() ?? _sensor.text;
       });
-    } catch (e) {
-      if (mounted) setState(() => _cfgError = e.toString());
-    }
+    } catch (_) {}
   }
 
   @override
@@ -70,9 +55,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
     _url.dispose();
     _depth.dispose();
     _sensor.dispose();
-    for (final c in _cfg.values) {
-      c.dispose();
-    }
     super.dispose();
   }
 
@@ -84,23 +66,23 @@ class _SettingsScreenState extends State<SettingsScreen> {
         const Text('Hub address', style: TextStyle(fontWeight: FontWeight.w700)),
         const SizedBox(height: 6),
         const Text(
-          'The laptop is on this phone\'s hotspot. Hub address: http://192.168.43.31:5000. '
-          'The red bar means the phone cannot reach that address.',
+          'The phone uses https://tabaport.onrender.com. '
+          'Change it here only if you need the laptop or the emulator.',
           style: TextStyle(color: Colors.black54, fontSize: 13),
         ),
         const SizedBox(height: 8),
         TextField(
           controller: _url,
           decoration: const InputDecoration(
-            labelText: 'http://192.168.43.31:5000',
+            labelText: 'https://tabaport.onrender.com',
             border: OutlineInputBorder(),
           ),
         ),
         const SizedBox(height: 8),
         Wrap(spacing: 8, children: [
           OutlinedButton(
-            onPressed: () => _url.text = HubConfig.lan,
-            child: const Text('This hotspot'),
+            onPressed: () => _url.text = HubConfig.renderHub,
+            child: const Text('Render hub'),
           ),
           OutlinedButton(
             onPressed: () => _url.text = HubConfig.local,
@@ -147,48 +129,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 'red_cm.drain_01': '$red',
               });
               setState(() => _msg = 'saved yellow $yellow cm, red $red cm — hub pushes CFG to the node');
-              await _loadConfig();
             } catch (e) {
               setState(() => _msg = e.toString());
             }
           },
           child: const Text('Compute and save on hub'),
         ),
-        const Divider(height: 32),
-        const Text('All hub settings', style: TextStyle(fontWeight: FontWeight.w700)),
-        const SizedBox(height: 6),
-        const Text(
-          'These are the same rows as the laptop Settings page. They load from the hub after you connect. '
-          'Saving here writes them on the laptop, including crews, silence timeout, and the node-to-road link.',
-          style: TextStyle(color: Colors.black54, fontSize: 13),
-        ),
-        const SizedBox(height: 8),
-        if (_cfgError != null)
-          Text(_cfgError!, style: const TextStyle(color: Colors.red))
-        else if (_cfg.isEmpty)
-          const Text('Connect to the hub to load settings.', style: TextStyle(color: Colors.black54))
-        else ...[
-          for (final key in _cfg.keys.toList()..sort())
-            Padding(
-              padding: const EdgeInsets.only(bottom: 8),
-              child: TextField(
-                controller: _cfg[key],
-                decoration: InputDecoration(labelText: key, border: const OutlineInputBorder(), isDense: true),
-              ),
-            ),
-          FilledButton(
-            onPressed: () async {
-              try {
-                await widget.api.saveConfig({for (final e in _cfg.entries) e.key: e.value.text});
-                setState(() => _msg = 'all settings saved on the hub');
-                await _loadConfig();
-              } catch (e) {
-                setState(() => _msg = e.toString());
-              }
-            },
-            child: const Text('Save all'),
-          ),
-        ],
         if (_msg.isNotEmpty)
           Padding(
             padding: const EdgeInsets.only(top: 12),

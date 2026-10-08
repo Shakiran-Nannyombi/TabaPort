@@ -20,8 +20,11 @@ class HubConfig {
   /// Android emulator's alias for the host machine.
   static const androidEmulator = 'http://10.0.2.2:5000';
 
-  /// This laptop on the phone hotspot. A physical phone cannot use 127.0.0.1.
+  /// This laptop on a local network. A physical phone cannot use 127.0.0.1.
   static const lan = 'http://192.168.43.31:5000';
+
+  /// Public hub. The phone uses this so it does not need the laptop's Wi-Fi address.
+  static const renderHub = 'https://tabaport.onrender.com';
 
   static bool get _onPhone => !kIsWeb && Platform.isAndroid;
 
@@ -31,14 +34,15 @@ class HubConfig {
         saved.contains('localhost') ||
         saved.contains('10.0.2.2') ||
         saved.contains('10.10.') ||
+        saved.contains('192.168.') ||
         saved.contains('trycloudflare.com');
   }
 
   static Future<String> load() async {
     final p = await SharedPreferences.getInstance();
     final saved = p.getString(_key);
-    if (_onPhone && _stale(saved)) return lan;
-    return saved ?? (_onPhone ? lan : local);
+    if (_onPhone && _stale(saved)) return renderHub;
+    return saved ?? (_onPhone ? renderHub : local);
   }
 
   static Future<void> save(String url) async {

@@ -24,11 +24,13 @@ class _IntroScreenState extends State<IntroScreen> with SingleTickerProviderStat
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(vsync: this, duration: const Duration(milliseconds: 2800));
+    _controller = AnimationController(vsync: this, duration: const Duration(milliseconds: 3400));
     _controller.addStatusListener((status) {
       if (status == AnimationStatus.completed && mounted) _finish();
     });
-    _controller.forward();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) _controller.forward();
+    });
   }
 
   @override
@@ -39,10 +41,9 @@ class _IntroScreenState extends State<IntroScreen> with SingleTickerProviderStat
 
   @override
   Widget build(BuildContext context) {
-    final logo = CurvedAnimation(parent: _controller, curve: const Interval(0.0, 0.42, curve: Curves.easeOutBack));
-    final name = CurvedAnimation(parent: _controller, curve: const Interval(0.32, 0.58, curve: Curves.easeOut));
-    final slogan = CurvedAnimation(parent: _controller, curve: const Interval(0.50, 0.78, curve: Curves.easeOut));
-    final bars = CurvedAnimation(parent: _controller, curve: const Interval(0.62, 0.88, curve: Curves.easeOut));
+    final logo = CurvedAnimation(parent: _controller, curve: const Interval(0.0, 0.28, curve: Curves.easeOutBack));
+    final slogan = CurvedAnimation(parent: _controller, curve: const Interval(0.12, 0.40, curve: Curves.easeOut));
+    final bars = CurvedAnimation(parent: _controller, curve: const Interval(0.22, 0.48, curve: Curves.easeOut));
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -57,23 +58,18 @@ class _IntroScreenState extends State<IntroScreen> with SingleTickerProviderStat
                 AnimatedBuilder(
                   animation: logo,
                   builder: (context, child) {
-                    return Opacity(
-                      opacity: logo.value.clamp(0.0, 1.0),
-                      child: Transform.translate(
-                        offset: Offset(0, (1 - logo.value) * -36),
-                        child: Transform.scale(scale: 0.72 + (0.28 * logo.value), child: child),
-                      ),
+                    final t = logo.value.clamp(0.0, 1.0);
+                    return Transform.translate(
+                      offset: Offset(0, (1 - t) * -28),
+                      child: Transform.scale(scale: 0.86 + (0.14 * t), child: child),
                     );
                   },
                   child: Image.asset('assets/logo.png', width: 168, height: 168),
                 ),
                 const SizedBox(height: 8),
-                FadeTransition(
-                  opacity: name,
-                  child: const Text(
-                    'TabaPort',
-                    style: TextStyle(fontSize: 36, fontWeight: FontWeight.w800, color: Color(0xFF1A2330), letterSpacing: -0.5),
-                  ),
+                const Text(
+                  'TabaPort',
+                  style: TextStyle(fontSize: 36, fontWeight: FontWeight.w800, color: Color(0xFF1A2330), letterSpacing: -0.5),
                 ),
                 const SizedBox(height: 10),
                 FadeTransition(
