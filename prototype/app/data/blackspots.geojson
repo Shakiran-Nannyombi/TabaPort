@@ -1,7 +1,7 @@
 {
  "type": "FeatureCollection",
  "name": "tabaport_blackspots",
- "source": "TabaPort_GIS_Code/flood_location_register.csv (Trevor, Oct 2026). Coordinates are approximate (E=estimated from description, W=web source). 100 m uncertainty until surveyed.",
+ "source": "Place pins for the routes we draw are snapped to the OpenStreetMap centreline (8 Oct 2026). Other pins stay Trevor's register.",
  "features": [
   {
    "type": "Feature",
@@ -10,7 +10,7 @@
     "place": "Clock Tower junction (Entebbe Rd / Queensway)",
     "division": "Central",
     "basin": "Nakivubo",
-    "coord_source": "E",
+    "coord_source": "OSM",
     "evidence": "IEEE #5267; concept note; FAM Reports Apr 2025",
     "why_prone": "Valley floor of the Nakivubo system below Nakasero; Kibuli and Mengo hills; several roads converge on one low crossing",
     "trial_priority": "High",
@@ -19,8 +19,8 @@
    "geometry": {
     "type": "Point",
     "coordinates": [
-     32.5785,
-     0.3095
+     32.57809,
+     0.30905
     ]
    }
   },
@@ -31,7 +31,7 @@
     "place": "Bwaise",
     "division": "Kawempe",
     "basin": "Lubigi (via Nsooba)",
-    "coord_source": "W",
+    "coord_source": "OSM",
     "evidence": "IEEE #5267; concept note; PreventionWeb; FAM Reports",
     "why_prone": "Former wetland floor at about 1180 m; dense informal settlement on the drainage line",
     "trial_priority": "High",
@@ -40,8 +40,8 @@
    "geometry": {
     "type": "Point",
     "coordinates": [
-     32.5611,
-     0.35
+     32.56334,
+     0.34898
     ]
    }
   },
@@ -52,7 +52,7 @@
     "place": "Kalerwe market (Bombo Rd / Gayaza Rd)",
     "division": "Kawempe",
     "basin": "Lubigi (via Nsooba)",
-    "coord_source": "E",
+    "coord_source": "OSM",
     "evidence": "IEEE #5267; concept note; FAM Reports",
     "why_prone": "Market and junction on the Nsooba valley line; heavy solid waste load into drains",
     "trial_priority": "High",
@@ -61,8 +61,8 @@
    "geometry": {
     "type": "Point",
     "coordinates": [
-     32.572,
-     0.3525
+     32.57208,
+     0.35352
     ]
    }
   },
@@ -73,7 +73,7 @@
     "place": "Mulago roundabout",
     "division": "Kawempe",
     "basin": "Lubigi (via Nsooba)",
-    "coord_source": "E",
+    "coord_source": "OSM",
     "evidence": "FAM Reports",
     "why_prone": "Road dip at the foot of Mulago Hill beside the national referral hospital",
     "trial_priority": "High",
@@ -82,8 +82,8 @@
    "geometry": {
     "type": "Point",
     "coordinates": [
-     32.5745,
-     0.3395
+     32.57738,
+     0.33944
     ]
    }
   },
@@ -94,7 +94,7 @@
     "place": "Kubiri roundabout (Bombo Rd)",
     "division": "Kawempe",
     "basin": "Lubigi (via Nsooba)",
-    "coord_source": "E",
+    "coord_source": "OSM",
     "evidence": "FAM Reports",
     "why_prone": "Low junction on Bombo Rd between Wandegeya and Bwaise",
     "trial_priority": "Medium",
@@ -103,8 +103,8 @@
    "geometry": {
     "type": "Point",
     "coordinates": [
-     32.569,
-     0.346
+     32.5684,
+     0.34545
     ]
    }
   },
@@ -220,7 +220,7 @@
     "place": "Nalukolongo channel",
     "division": "Rubaga",
     "basin": "Nalukolongo",
-    "coord_source": "E",
+    "coord_source": "OSM",
     "evidence": "New Vision; FAM Reports; Monitor Jul 2026",
     "why_prone": "Primary channel reported as undersized for its catchment (Parliament Jul 2026)",
     "trial_priority": "High",
@@ -229,8 +229,8 @@
    "geometry": {
     "type": "Point",
     "coordinates": [
-     32.549,
-     0.296
+     32.54098,
+     0.29496
     ]
    }
   },
@@ -241,7 +241,7 @@
     "place": "Ndeeba",
     "division": "Rubaga",
     "basin": "Nalukolongo",
-    "coord_source": "E",
+    "coord_source": "OSM",
     "evidence": "FAM Reports",
     "why_prone": "Low commercial strip on the Masaka Rd corridor",
     "trial_priority": "Medium",
@@ -250,8 +250,8 @@
    "geometry": {
     "type": "Point",
     "coordinates": [
-     32.561,
-     0.294
+     32.5609,
+     0.29389
     ]
    }
   },

@@ -10,8 +10,8 @@
     "queensway",
     "entebbe rd clock tower"
    ],
-   "lat": 0.3095,
-   "lon": 32.5785,
+   "lat": 0.30905,
+   "lon": 32.57809,
    "segment_ids": [
     "clock_tower_01"
    ]
@@ -25,8 +25,8 @@
     "bwaise roundabout",
     "bwaise"
    ],
-   "lat": 0.35,
-   "lon": 32.5611,
+   "lat": 0.34898,
+   "lon": 32.56334,
    "segment_ids": [
     "bwaise_01"
    ]
@@ -40,8 +40,8 @@
     "kaleerwe",
     "kalerwe"
    ],
-   "lat": 0.3525,
-   "lon": 32.572,
+   "lat": 0.35352,
+   "lon": 32.57208,
    "segment_ids": [
     "kalerwe_01"
    ]
@@ -54,8 +54,8 @@
     "mulago round about",
     "mulago roundabout"
    ],
-   "lat": 0.3395,
-   "lon": 32.5745,
+   "lat": 0.33944,
+   "lon": 32.57738,
    "segment_ids": [
     "mulago_rbt_01"
    ]
@@ -67,8 +67,8 @@
     "kubiri",
     "kubiri round about"
    ],
-   "lat": 0.346,
-   "lon": 32.569,
+   "lat": 0.34545,
+   "lon": 32.5684,
    "segment_ids": [
     "kubiri_01"
    ]
@@ -141,8 +141,8 @@
     "nalukolongo bridge",
     "nalukolongo"
    ],
-   "lat": 0.296,
-   "lon": 32.549,
+   "lat": 0.29496,
+   "lon": 32.54098,
    "segment_ids": [
     "nalukolongo_01"
    ]
@@ -154,8 +154,8 @@
     "ndeeba",
     "ndeba"
    ],
-   "lat": 0.294,
-   "lon": 32.561,
+   "lat": 0.29389,
+   "lon": 32.5609,
    "segment_ids": [
     "ndeeba_01"
    ]
