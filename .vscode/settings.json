@@ -1,5 +1,21 @@
 {
   "idf.currentSetup": "/home/dev-kiran/.espressif/v6.0.1/esp-idf",
+  "java.jdt.ls.java.home": "/usr/lib/jvm/java-21-openjdk-amd64",
+  "java.import.gradle.java.home": "/usr/lib/jvm/java-17-openjdk-amd64",
+  "gradle.java.home": "/usr/lib/jvm/java-17-openjdk-amd64",
+  "gradle.autoDetect": "off",
+  "gradle.nestedProjects": false,
+  "java.configuration.runtimes": [
+    {
+      "name": "JavaSE-17",
+      "path": "/usr/lib/jvm/java-17-openjdk-amd64",
+      "default": true
+    },
+    {
+      "name": "JavaSE-21",
+      "path": "/usr/lib/jvm/java-21-openjdk-amd64"
+    }
+  ],
   "java.configuration.updateBuildConfiguration": "disabled",
   "java.import.gradle.enabled": false,
   "java.project.importOnFirstTimeStartup": "disabled",
