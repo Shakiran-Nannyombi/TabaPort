@@ -27,6 +27,14 @@ SERIAL_URL=fake ../../.venv/bin/python app.py       # no hardware; Dev controls 
 
 Open http://localhost:5000. Wi-Fi off during filming; nothing here needs it.
 
+The Flutter phone app lives in [`mobile/`](mobile/README.md). It uses this same REST API. To let a phone on the LAN in:
+
+```bash
+HOST=0.0.0.0 ../../.venv/bin/python app.py
+```
+
+Then on the phone, Settings → hub URL → `http://<laptop-ip>:5000`. USB still stays on the laptop.
+
 ## Screens
 
 - **Map** `/map`: road segments coloured green / yellow / red / unknown (dashed), 17 blackspots from the register, the sensor node, field report box (gazetteer match → segment), Route crew (A*, red removed, unknown ×2, yellow ×4).

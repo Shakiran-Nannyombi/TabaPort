@@ -1,0 +1,307 @@
+{
+ "type": "FeatureCollection",
+ "name": "tabaport_road_segments",
+ "note": "Shortlist = TP-04, TP-03, TP-01, TP-11, TP-02 (Trevor's GIS report). Connector segments make the network routable for the demo. Only campus_drain_01 has a sensor node.",
+ "features": [
+  {
+   "type": "Feature",
+   "properties": {
+    "segment_id": "campus_drain_01",
+    "name": "Campus drain (demo node)",
+    "road": "Campus access road",
+    "place_id": null,
+    "shortlist": false,
+    "node_id": "drain_01",
+    "geometry_source": "schematic; replace with digitised line"
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      32.5688,
+      0.3338
+     ],
+     [
+      32.5698,
+      0.3344
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "segment_id": "mulago_rbt_01",
+    "name": "Mulago roundabout",
+    "road": "Mulago Hill Rd",
+    "place_id": "TP-04",
+    "shortlist": true,
+    "node_id": null,
+    "geometry_source": "schematic; replace with digitised line"
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      32.5705,
+      0.333
+     ],
+     [
+      32.5745,
+      0.3395
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "segment_id": "kubiri_01",
+    "name": "Wandegeya to Kubiri",
+    "road": "Bombo Rd",
+    "place_id": "TP-05",
+    "shortlist": false,
+    "node_id": null,
+    "geometry_source": "schematic; replace with digitised line"
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      32.5705,
+      0.333
+     ],
+     [
+      32.569,
+      0.346
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "segment_id": "kalerwe_01",
+    "name": "Kalerwe market",
+    "road": "Gayaza Rd",
+    "place_id": "TP-03",
+    "shortlist": true,
+    "node_id": null,
+    "geometry_source": "schematic; replace with digitised line"
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      32.569,
+      0.346
+     ],
+     [
+      32.572,
+      0.3525
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "segment_id": "bwaise_01",
+    "name": "Kubiri to Bwaise",
+    "road": "Bombo Rd",
+    "place_id": "TP-02",
+    "shortlist": true,
+    "node_id": null,
+    "geometry_source": "schematic; replace with digitised line"
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      32.569,
+      0.346
+     ],
+     [
+      32.5611,
+      0.35
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "segment_id": "kalerwe_bwaise_01",
+    "name": "Kalerwe to Bwaise link",
+    "road": "Kalerwe-Bwaise Rd",
+    "place_id": null,
+    "shortlist": false,
+    "node_id": null,
+    "geometry_source": "schematic; replace with digitised line"
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      32.572,
+      0.3525
+     ],
+     [
+      32.5611,
+      0.35
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "segment_id": "mulago_kubiri_01",
+    "name": "Mulago to Kubiri",
+    "road": "Kira Rd / Bombo Rd link",
+    "place_id": null,
+    "shortlist": false,
+    "node_id": null,
+    "geometry_source": "schematic; replace with digitised line"
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      32.5745,
+      0.3395
+     ],
+     [
+      32.569,
+      0.346
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "segment_id": "kampala_rd_01",
+    "name": "Wandegeya to city centre",
+    "road": "Bombo Rd / Kampala Rd",
+    "place_id": null,
+    "shortlist": false,
+    "node_id": null,
+    "geometry_source": "schematic; replace with digitised line"
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      32.5705,
+      0.333
+     ],
+     [
+      32.579,
+      0.318
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "segment_id": "clock_tower_01",
+    "name": "Clock Tower junction",
+    "road": "Entebbe Rd / Queensway",
+    "place_id": "TP-01",
+    "shortlist": true,
+    "node_id": null,
+    "geometry_source": "schematic; replace with digitised line"
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      32.579,
+      0.318
+     ],
+     [
+      32.5785,
+      0.3095
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "segment_id": "ndeeba_01",
+    "name": "Clock Tower to Ndeeba",
+    "road": "Masaka Rd",
+    "place_id": "TP-12",
+    "shortlist": false,
+    "node_id": null,
+    "geometry_source": "schematic; replace with digitised line"
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      32.5785,
+      0.3095
+     ],
+     [
+      32.561,
+      0.294
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "segment_id": "nalukolongo_01",
+    "name": "Nalukolongo channel crossing",
+    "road": "Masaka Rd",
+    "place_id": "TP-11",
+    "shortlist": true,
+    "node_id": null,
+    "geometry_source": "schematic; replace with digitised line"
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      32.561,
+      0.294
+     ],
+     [
+      32.549,
+      0.296
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "segment_id": "campus_link_01",
+    "name": "Campus drain to Wandegeya",
+    "road": "Campus access road",
+    "place_id": null,
+    "shortlist": false,
+    "node_id": null,
+    "geometry_source": "schematic; replace with digitised line"
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      32.5698,
+      0.3344
+     ],
+     [
+      32.5705,
+      0.333
+     ]
+    ]
+   }
+  }
+ ]
+}
