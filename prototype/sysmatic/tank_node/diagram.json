@@ -3,44 +3,53 @@
   "author": "TabaPort",
   "editor": "wokwi",
   "parts": [
-    { "type": "board-esp32-devkit-c-v4", "id": "esp", "top": 0, "left": 0, "attrs": {} },
-    { "type": "wokwi-hc-sr04", "id": "ultrasonic1", "top": -120, "left": 180, "attrs": { "distance": "41" } },
-    { "type": "wokwi-resistor", "id": "r1", "top": 60, "left": 200, "attrs": { "value": "1000" } },
-    { "type": "wokwi-resistor", "id": "r2", "top": 110, "left": 200, "attrs": { "value": "2000" } },
-    { "type": "wokwi-led", "id": "ledG", "top": 200, "left": 40, "attrs": { "color": "green" } },
-    { "type": "wokwi-led", "id": "ledY", "top": 200, "left": 100, "attrs": { "color": "yellow" } },
-    { "type": "wokwi-led", "id": "ledR", "top": 200, "left": 160, "attrs": { "color": "red" } },
-    { "type": "wokwi-resistor", "id": "rG", "top": 260, "left": 40, "attrs": { "value": "220" } },
-    { "type": "wokwi-resistor", "id": "rY", "top": 260, "left": 100, "attrs": { "value": "220" } },
-    { "type": "wokwi-resistor", "id": "rR", "top": 260, "left": 160, "attrs": { "value": "220" } },
-    { "type": "wokwi-buzzer", "id": "bz1", "top": 200, "left": 240, "attrs": { "volume": "0.1" } }
+    { "type": "board-esp32-devkit-c-v4", "id": "esp", "top": 80, "left": 80, "attrs": {} },
+    { "type": "wokwi-hc-sr04", "id": "ultrasonic1", "top": -80, "left": 420, "attrs": { "distance": "41" } },
+    { "type": "wokwi-text", "id": "t_probe", "top": -120, "left": 420, "attrs": { "text": "JSN-SR04T stand-in  (set distance with the slider)" } },
+
+    { "type": "wokwi-resistor", "id": "r1", "top": 80, "left": 430, "rotate": 90, "attrs": { "value": "1000" } },
+    { "type": "wokwi-text", "id": "t_r1", "top": 70, "left": 480, "attrs": { "text": "1 kOhm series" } },
+    { "type": "wokwi-resistor", "id": "r2", "top": 180, "left": 430, "rotate": 90, "attrs": { "value": "2000" } },
+    { "type": "wokwi-text", "id": "t_r2", "top": 200, "left": 480, "attrs": { "text": "2 kOhm to GND" } },
+    { "type": "wokwi-text", "id": "t_div", "top": 40, "left": 420, "attrs": { "text": "Echo divider: Echo -> 1k -> GPIO18 -> 2k -> GND" } },
+
+    { "type": "wokwi-led", "id": "ledG", "top": 380, "left": 40, "attrs": { "color": "green", "label": "green" } },
+    { "type": "wokwi-led", "id": "ledY", "top": 380, "left": 140, "attrs": { "color": "yellow", "label": "yellow" } },
+    { "type": "wokwi-led", "id": "ledR", "top": 380, "left": 240, "attrs": { "color": "red", "label": "red" } },
+    { "type": "wokwi-resistor", "id": "rG", "top": 330, "left": 40, "rotate": 90, "attrs": { "value": "220" } },
+    { "type": "wokwi-resistor", "id": "rY", "top": 330, "left": 140, "rotate": 90, "attrs": { "value": "220" } },
+    { "type": "wokwi-resistor", "id": "rR", "top": 330, "left": 240, "rotate": 90, "attrs": { "value": "220" } },
+    { "type": "wokwi-text", "id": "t_led", "top": 300, "left": 40, "attrs": { "text": "GPIO25 / 26 / 27  each through 220 Ohm" } },
+
+    { "type": "wokwi-buzzer", "id": "bz1", "top": 360, "left": 360, "attrs": { "volume": "0.1" } },
+    { "type": "wokwi-text", "id": "t_bz", "top": 340, "left": 360, "attrs": { "text": "GPIO14 buzzer" } }
   ],
   "connections": [
     [ "esp:TX", "$serialMonitor:RX", "", [] ],
     [ "esp:RX", "$serialMonitor:TX", "", [] ],
 
-    [ "ultrasonic1:VCC", "esp:5V", "red", [] ],
-    [ "ultrasonic1:GND", "esp:GND.1", "black", [] ],
-    [ "ultrasonic1:TRIG", "esp:5", "blue", [] ],
+    [ "ultrasonic1:VCC", "esp:5V", "red", [ "v8", "h-80" ] ],
+    [ "ultrasonic1:GND", "esp:GND.1", "black", [ "v16", "h-80" ] ],
+    [ "ultrasonic1:TRIG", "esp:5", "blue", [ "v24", "h-40" ] ],
 
-    [ "ultrasonic1:ECHO", "r1:1", "orange", [] ],
-    [ "r1:2", "esp:18", "orange", [] ],
-    [ "r2:1", "esp:18", "orange", [] ],
-    [ "r2:2", "esp:GND.1", "black", [] ],
+    [ "ultrasonic1:ECHO", "r1:1", "orange", [ "v32", "h0" ] ],
+    [ "r1:2", "esp:18", "orange", [ "h0", "v20" ] ],
+    [ "r2:1", "esp:18", "orange", [ "h-20" ] ],
+    [ "r2:2", "esp:GND.1", "black", [ "v20", "h-80" ] ],
 
-    [ "esp:25", "rG:1", "green", [] ],
+    [ "esp:25", "rG:1", "green", [ "v20" ] ],
     [ "rG:2", "ledG:A", "green", [] ],
-    [ "ledG:C", "esp:GND.1", "black", [] ],
+    [ "ledG:C", "esp:GND.2", "black", [ "v20", "h20" ] ],
 
-    [ "esp:26", "rY:1", "gold", [] ],
+    [ "esp:26", "rY:1", "gold", [ "v20" ] ],
     [ "rY:2", "ledY:A", "gold", [] ],
-    [ "ledY:C", "esp:GND.1", "black", [] ],
+    [ "ledY:C", "esp:GND.2", "black", [ "v20" ] ],
 
-    [ "esp:27", "rR:1", "red", [] ],
+    [ "esp:27", "rR:1", "red", [ "v20" ] ],
     [ "rR:2", "ledR:A", "red", [] ],
-    [ "ledR:C", "esp:GND.1", "black", [] ],
+    [ "ledR:C", "esp:GND.2", "black", [ "v20", "h-20" ] ],
 
-    [ "esp:14", "bz1:1", "purple", [] ],
-    [ "bz1:2", "esp:GND.1", "black", [] ]
+    [ "esp:14", "bz1:1", "purple", [ "v40", "h20" ] ],
+    [ "bz1:2", "esp:GND.3", "black", [ "v8" ] ]
   ]
 }
