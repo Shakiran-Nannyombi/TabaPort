@@ -1,5 +1,12 @@
 forme.md
 .venv/
+prototype/app/mobile/.dart_tool/
+prototype/app/mobile/.idea/
+prototype/app/mobile/build/
+prototype/app/mobile/.flutter-plugins
+prototype/app/mobile/.flutter-plugins-dependencies
+prototype/app/mobile/*.iml
+prototype/app/mobile/android/.kotlin/
 __pycache__/
 *.pyc
 prototype/app/data/tabaport.db*
