@@ -1,0 +1,1210 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8">
+<title>TabaPort progress report after IEEE Phase 2</title>
+<style>
+@page { size: A4; margin: 16mm 14mm 18mm 14mm; }
+html, body { font-family: "Liberation Serif", "Times New Roman", Times, serif; font-size: 11pt; line-height: 1.4; color: #111; }
+h1 { font-size: 20pt; margin: 0 0 10pt; }
+h2 { font-size: 14pt; margin: 18pt 0 8pt; page-break-after: avoid; }
+h3 { font-size: 12pt; margin: 14pt 0 6pt; page-break-after: avoid; }
+p, li { orphans: 3; widows: 3; }
+table { border-collapse: collapse; width: 100%; font-size: 9.5pt; margin: 8pt 0 12pt; }
+th, td { border: 1px solid #444; padding: 4pt 5pt; vertical-align: top; }
+th { background: #eee; }
+img { max-width: 100%; height: auto; display: block; margin: 8pt auto; page-break-inside: avoid; }
+strong { font-weight: 700; }
+code, pre { font-family: "Liberation Mono", Consolas, monospace; font-size: 8.5pt; }
+pre { background: #f4f4f4; padding: 8pt; overflow: hidden; white-space: pre-wrap; }
+hr { display: none; }
+a { color: #000; text-decoration: none; }
+</style></head><body><h1>TabaPort progress report after IEEE Phase 2</h1>
+<p><strong>IEEE Response Quest Challenge. Concept 5267.</strong><br />
+Flood watch and crew dispatch for Kampala that still works with no internet.</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Document</td>
+<td>Team research and first build progress report</td>
+</tr>
+<tr>
+<td>Date</td>
+<td>9 October 2026</td>
+</tr>
+<tr>
+<td>Version</td>
+<td>3.0</td>
+</tr>
+<tr>
+<td>Phase 2</td>
+<td>Idea sent 24 May 2026. Moved to Phase 3.</td>
+</tr>
+<tr>
+<td>Phase 3</td>
+<td>Video of a real person using a working product. Portal closes 9 October 2026.</td>
+</tr>
+<tr>
+<td>SRS</td>
+<td>First build, October 2026 (docs/SRS.md)</td>
+</tr>
+</tbody>
+</table>
+<p>This report puts the team research in one place. Water, drain, map, and software sit with what we then built. <strong>Drawings and site photos come from Eric and the calculation file.</strong> Screen shots come from the first laptop app. News and papers are cited. We do not pretend they are our lab results.</p>
+<h2>The team</h2>
+<p>Phase 2 was filed as <strong>one IEEE name</strong> (Shakiran Nannyombi). That PDF did not list a team. After Phase 2, five people did the work. Put these names on the PDF cover, the video end card, and every file you send with the video.</p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Role</th>
+<th>What they did</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Shakiran Nannyombi</strong></td>
+<td>Lead. IEEE member. Named on Phase 2 and Phase 3.</td>
+<td>Idea, firmware, chair of research week, dispatcher on camera, join the parts.</td>
+</tr>
+<tr>
+<td><strong>Joel</strong></td>
+<td>Water, crew, words on the screen</td>
+<td>When a road is unsafe. The 50 percent and 80 percent rule. Job words. Pour and timing on film day.</td>
+</tr>
+<tr>
+<td><strong>Eric</strong></td>
+<td>Drain, box, sensor place</td>
+<td>What drain. How to mount. Trash versus water. Threats. Maths. Hardware. Crew on camera.</td>
+</tr>
+<tr>
+<td><strong>Mugisha Trevour Jeanclaude</strong></td>
+<td>Maps and land. Makerere Land Surveying. Finish due August 2027.</td>
+<td>17 flood places. Earth Engine score. Map files with no internet. Camera and site.</td>
+</tr>
+<tr>
+<td><strong>Sharif</strong></td>
+<td>Software</td>
+<td>Map choice. Four tables in SQLite. USB link. Job flow. SRS. Flask hub.</td>
+</tr>
+</tbody>
+</table>
+<p>Working notes also say <strong>Trevor</strong> for Mugisha Trevour Jeanclaude. Add family names for Joel, Eric and Sharif on the printed cover if you have them.</p>
+<p><strong>How we split the research</strong> (do not do someone else lane):</p>
+<ul>
+<li>Joel: water and the crew. When is a road unsafe? After an alert, who acts?</li>
+<li>Eric: the drain and the box. Where can a sensor sit?</li>
+<li>Trevor: place and the map. Which sites are real? What map is good enough?</li>
+<li>Sharif: software. What can we code in time?</li>
+<li>Shakiran: chair. Write what the four decide. Do not bring a finished design.</li>
+</ul>
+<h2>1. What this report is for</h2>
+<p>IEEE Phase 3 needs a <strong>video</strong>. The video is not the research. This file is the research and the build, so a judge or a teacher can see:</p>
+<ol>
+<li>what Phase 2 claimed</li>
+<li>what each person found, with sources</li>
+<li>what we locked as the first build</li>
+<li>what the product does (with screen shots)</li>
+<li>what we still do not claim</li>
+</ol>
+<p>TabaPort in one sentence: a water sensor on a drain feeds a laptop with no internet. Roads show <strong>green, yellow, red, or unknown</strong>. A job opens so a dispatcher can send a crew <strong>before</strong> the road floods.</p>
+<p>It does not stop flooding. KCCA channels move water. TabaPort tells crews <strong>where the water is</strong>.</p>
+<h2>2. The problem, and the posts we used</h2>
+<p>When heavy rain hits Kampala, drains at Clock Tower, Bwaise, Kalerwe and other flood spots can close in <strong>minutes</strong>. Plastic and silt block channels. Phone networks jam or drop. Crews, traffic police, boda riders and commuters then cannot see which drain is rising, which road is open, or where to send the next truck. Today that is radio, WhatsApp, and people standing in water.</p>
+<p>KCCA is building channels. That does not remove the need for a live water level. Building moves water. TabaPort sits <strong>on top</strong> of that work, also while channels are still being built, and after waste and silt block the new ones.</p>
+<h3>2.1 Numbers we reuse (as written by others)</h3>
+<table>
+<thead>
+<tr>
+<th>Number</th>
+<th>What it is</th>
+<th>Where we took it</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>About 362 km of drains</td>
+<td>Eight catchments: Nakivubo, Lubigi, Walufumbe, Nalukolongo, Kansanga, Kinawataka, Nakamiro, Mayanja</td>
+<td>KCCA briefs. Phase 2. Concept note.</td>
+</tr>
+<tr>
+<td>69 flood spots</td>
+<td>Sites that still need watch</td>
+<td>KCCA. Concept note.</td>
+</tr>
+<tr>
+<td>UGX 768 billion</td>
+<td>Drain works ask, 2026/27 to 2030/31</td>
+<td>KCCA and Parliament briefs</td>
+</tr>
+<tr>
+<td>About US$50 million a year</td>
+<td>Flood damage (UNDP figure in the inquiry)</td>
+<td>Monitor and Parliament story</td>
+</tr>
+<tr>
+<td>980 m of Lubigi not finished. Nsoba and Kiwunya just started. Jugula more than 90 percent taken by buildings.</td>
+<td>Works are a five year plan, not a finished city</td>
+<td>KCCA and UBC updates</td>
+</tr>
+</tbody>
+</table>
+<p>KCCA Deputy ED Benon Kigenyi: <em>"We cannot stop the rain, but we can prepare Kampala to manage it better."</em> He also said new drains fail if waste and silt keep blocking them (<a href="https://www.kcca.go.ug/news/1154/">KCCA news 1154</a>. <a href="https://ubc.go.ug/2026/08/12/kcca-steps-up-drainage-works-to-tackle-flooding-in-kampala/">UBC, 12 August 2026</a>).</p>
+<p>Parliament asked KCCA for a <a href="https://www.monitor.co.ug/uganda/news/national/parliament-gives-kcca-7-days-to-explain-kampala-flooding-5543126">7 day report</a> after visits at Nalukolongo Najjanankumbi, Lugogo and Kyambogo.</p>
+<p><a href="https://ntv.co.ug/news/kcca-urges-land-donation-to-solve-kampala-flooding">NTV</a> said KCCA asked for land so channels can grow. Those roads stay small for years. Those are the sites that need a sensor and a detour. Do not say the civil works already solved them.</p>
+<table>
+<thead>
+<tr>
+<th>KCCA is building</th>
+<th>TabaPort adds</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Bigger channels and culverts</td>
+<td>Live water level at those same places</td>
+</tr>
+<tr>
+<td>69 flood spots watched by patrol</td>
+<td>A ranked job list so the first truck goes to the worst site</td>
+</tr>
+<tr>
+<td>Trucks ready when rain starts</td>
+<td>A map with no internet: red, yellow, green</td>
+</tr>
+<tr>
+<td>Waste and silt as the leftover failure</td>
+<td>A median filter for floating plastic, plus a report from a rider who saw the block</td>
+</tr>
+<tr>
+<td>A five year master plan</td>
+<td>Eyes during the years of building</td>
+</tr>
+</tbody>
+</table>
+<h2>3. What Phase 2 claimed, and what we cut</h2>
+<p><strong>Phase 2 file:</strong> docs/phase2/QM_Idea_5267_08_23_2026.pdf<br />
+<strong>Title:</strong> Tabaport: On Site Edge Intelligence and Dispatch System for Urban Flash Floods (5267)<br />
+<strong>Author on the form:</strong> Shakiran Nannyombi. Sent 24 May 2026. <strong>Is this a team submission? No.</strong><br />
+<strong>Result:</strong> moved to Phase 3.</p>
+<h3>3.1 The idea (seven pages)</h3>
+<ol>
+<li><strong>Nodes.</strong> ESP32 plus a sealed ultrasonic in culverts. A moving median on the chip so floating plastic is not a flood. Sample every 30 seconds. Aim under US$55 per node.</li>
+<li><strong>Hub.</strong> Laptop or Raspberry Pi. SpatiaLite and OSM. No internet.</li>
+<li><strong>AHP rank.</strong> Rank sites by how fast water rises, hospitals and flyovers, and how many people live there.</li>
+<li><strong>A star routes.</strong> A red road gets a huge cost. Detour on high ground (for example the Northern Bypass).</li>
+<li><strong>Human reports.</strong> USSD or SMS from boda riders. Place name match. 100 m circle until a sensor or a crew confirms.</li>
+<li><strong>Privacy.</strong> Drop the phone number and IMSI at the door. MIT licence.</li>
+<li><strong>Public loop.</strong> Cell broadcast SMS in a 2 km ring and KCCA social posts when a node goes red.</li>
+</ol>
+<p>Phase 2 sources named on the form: KCCA Drainage Master Plan. OpenStreetMap Uganda. UNMA. IEEE Systems Council notes.</p>
+<p>IEEE review (IT, legal, finance names in the PDF) passed the <strong>idea</strong>. That is not a lab test of the hardware.</p>
+<h3>3.2 What the first build actually is</h3>
+<table>
+<thead>
+<tr>
+<th>Phase 2 line</th>
+<th>First build (this report and the video)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Solar, LoRa, BLE, GSM fallback</td>
+<td>USB serial, 115200, one cable</td>
+</tr>
+<tr>
+<td>SpatiaLite</td>
+<td>SQLite and GeoJSON. Map work done <strong>before</strong> the rain</td>
+</tr>
+<tr>
+<td>Sample every 30 s</td>
+<td>2 Hz (500 ms) so the chart moves on camera. Field sample time is still an open power question</td>
+</tr>
+<tr>
+<td>Cell broadcast 2 km</td>
+<td><strong>Not ours.</strong> UCC and the phone companies. A typed report on the hub instead</td>
+</tr>
+<tr>
+<td>Raspberry Pi city hub</td>
+<td>One laptop. WiFi <strong>off</strong></td>
+</tr>
+<tr>
+<td>US$55 production node</td>
+<td>USB lab or campus node (about UGX 138000 to 198000 parts)</td>
+</tr>
+</tbody>
+</table>
+<p>Sharif last line, which the team locked: <em>if we cannot acknowledge, assign and close, we only have a graph, not a dispatch tool.</em></p>
+<h2>4. One system, five owners</h2>
+<p>The four research files stay one product if they share names. Do not type the same place twice with two different numbers.</p>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Meaning</th>
+<th>Owner</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>place_id TP 01 to TP 17</td>
+<td>Flood place list</td>
+<td>Maps</td>
+</tr>
+<tr>
+<td>segment_id for example clock_tower_01</td>
+<td>Coloured road stretch</td>
+<td>Sharif and GeoJSON</td>
+</tr>
+<tr>
+<td>node_id for example drain_01</td>
+<td>Physical sensor</td>
+<td>Firmware and hub</td>
+</tr>
+</tbody>
+</table>
+<p>Eric owns the culvert and the node hardware. Sharif owns readings, segments and jobs. Joel and Shakiran own crew words and the IEEE cut. Trevor owns the place list and the map files.</p>
+<h2>5. Joel: water, bands, and what happens after the alert</h2>
+<p><strong>Source:</strong> docs/phase3/thresholds-and-words.md and the research week brief.</p>
+<p>Joel was asked not to wait to be told the centimetres. Books do not give one "unsafe for a boda" number for every Kampala drain. Depth is measured <strong>at the site</strong>.</p>
+<h3>5.1 Two tapes, then the bands</h3>
+<ul>
+<li><strong>H_sensor:</strong> probe face to drain floor (invert), dry.</li>
+<li><strong>H_road:</strong> road or path edge to invert.</li>
+</ul>
+<p>Water depth on the laptop is the same formula Eric drew (Figure E9): H_water = H_sensor minus d_measured.</p>
+<table>
+<thead>
+<tr>
+<th>Band</th>
+<th>Default rule</th>
+<th>Tank fallback (drain under 40 cm)</th>
+<th>Meaning for the road</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Green</strong></td>
+<td>depth under 50 percent of H_road</td>
+<td>under 8 cm</td>
+<td>Drain is working. Nothing to do.</td>
+</tr>
+<tr>
+<td><strong>Yellow</strong></td>
+<td>depth at or above 50 percent of H_road</td>
+<td>at or above 8 cm</td>
+<td>Filling faster than it empties. Inlet is probably blocked. Send someone <strong>now</strong>.</td>
+</tr>
+<tr>
+<td><strong>Red</strong></td>
+<td>depth at or above 80 percent of H_road, <strong>or</strong> within 10 cm of the road edge</td>
+<td>at or above 15 cm</td>
+<td>Water on the road in minutes. Close the lane. Clear the inlet.</td>
+</tr>
+<tr>
+<td><strong>Unknown</strong></td>
+<td>no reading for 10 s</td>
+<td>same</td>
+<td>We do not know. <strong>Never green.</strong> Treat as yellow for routes.</td>
+</tr>
+</tbody>
+</table>
+<p>Example: 60 cm drain, probe 50 cm above the floor. Yellow at <strong>30 cm</strong>. Red at <strong>48 cm</strong> (also within 10 cm of the 50 cm edge). Settings works this out from H_road.</p>
+<p><strong>Why 50 and 80.</strong> KCCA drains have freeboard. Half full during rain is fine <strong>only if the water is moving</strong>. Half full and rising means the inlet or outlet is blocked. Eighty percent leaves about the time a city crew needs to reach a flood spot from the Clock Tower depot in traffic (about 10 to 15 minutes) before the path is wet.</p>
+<p>Rise rate (cm per minute over the last 60 s) is <strong>shown</strong> in the first build. It does not change the band until we have real storm data. A rise above 5 cm per min in a storm is a later rule that the inlet is blocked, not just a full drain.</p>
+<h3>5.2 After the alert: who does what</h3>
+<p>If this flow is missing, Sharif said, we only have a graph.</p>
+<table>
+<thead>
+<tr>
+<th>Trigger</th>
+<th>Job words on the laptop</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Yellow</td>
+<td><strong>Send drainage crew to check inlet</strong></td>
+</tr>
+<tr>
+<td>Red</td>
+<td><strong>Ask traffic police to close lane. Send drainage crew to clear inlet</strong></td>
+</tr>
+<tr>
+<td>Human report, no sensor</td>
+<td><strong>Send drainage crew to check inlet</strong> (segment yellow. Never red without a sensor or a crew on site)</td>
+</tr>
+<tr>
+<td>Opened by hand</td>
+<td>dispatcher types the action</td>
+</tr>
+</tbody>
+</table>
+<p>Statuses: open, then acked, then en route, then on site, then closed. Side exit at any step: false alarm with a reason.</p>
+<p>Rules Joel wrote (and Shakiran says on camera):</p>
+<ol>
+<li>Acknowledge within <strong>3 minutes</strong>. After that the row flashes.</li>
+<li>Assign a crew before or at acknowledge.</li>
+<li><strong>Closing a job does not paint the road green.</strong> Only the sensor does. If the crew clears the inlet, the water drops and the sensor turns it green itself.</li>
+<li>False alarm reasons we expect: debris under the probe, crew found the drain clear, test pour.</li>
+</ol>
+<p>Demo crews: Team A Central. Team B Kawempe. Team C Rubaga. Traffic Police.</p>
+<p>Spoken lines (video):</p>
+<ol>
+<li>Yellow. <em>"Campus drain is at thirty centimetres and rising. That is yellow. I am sending Team A to check the inlet."</em></li>
+<li>Red. <em>"Forty eight. Red. Water is ten centimetres from the path. I am asking traffic to close the lane."</em></li>
+<li>Level falling. <em>"The sensor will turn it green on its own. I close the job when Team A reports clear."</em></li>
+<li>USB pull. <em>"I have lost the node. It goes grey, not green. I do not guess."</em></li>
+</ol>
+<h2>6. Eric: the drain, the box, and the sensor</h2>
+<p><strong>Sources:</strong> docs/Research/TabaPort_eric.docx (Drainage Sensor Placement for Urban Flood Monitoring). docs/Research/CalculationTabaPort.docx. docs/phase3/wiring.md. docs/phase3/bom.md.</p>
+<h3>6.1 What kind of drain, and where a sensor can sit</h3>
+<p>KCCA drains are main and second channels, community drains, road crossings and box culverts. Size at one site must come from drawings or a tape, not from "a standard Kampala drain." Eric note opens with the structures.</p>
+<p><img alt="Figure E1. Concrete box culvert being set in an open cut. This is the first structure Eric recommends." src="Research/extracted-figures/eric/image1.png" /></p>
+<p><strong>Figure E1.</strong> Box culvert (from Eric placement note). Sensor place: on the ceiling slab or headwall, <strong>upstream</strong> of the inlet splash, not in the silt on the floor.</p>
+<p><img alt="Figure E2. Concrete pipe culvert in a trench. Smaller road crossing." src="Research/extracted-figures/eric/image2.png" /></p>
+<p><strong>Figure E2.</strong> Pipe culvert. Uganda guide in the note: at least <strong>600 mm</strong> under a road. Sensor sees water at an open chamber upstream, not inside the pipe.</p>
+<p><img alt="Figure E3. Corrugated metal pipe stock." src="Research/extracted-figures/eric/image3.png" /></p>
+<p><strong>Figure E3.</strong> Corrugated metal pipe. Same job as a concrete pipe. Mount and blind zone rules do not change.</p>
+<p><img alt="Figure E4. Plastic culvert pipe stacked for install." src="Research/extracted-figures/eric/image4.png" /></p>
+<p><strong>Figure E4.</strong> Plastic pipe. Community drains often use these. Still measure width, floor and trash before you pick a mount.</p>
+<table>
+<thead>
+<tr>
+<th>Situation</th>
+<th>Likely structure</th>
+<th>Sensor sees water</th>
+<th>Trash and silt</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Roadside runoff</td>
+<td>Open rectangle or trap channel</td>
+<td>Stable section upstream</td>
+<td>Litter at low points</td>
+</tr>
+<tr>
+<td>Community drain</td>
+<td>Small channel</td>
+<td>Protected wall or overhead</td>
+<td>Household waste, plants</td>
+</tr>
+<tr>
+<td>Road crossing</td>
+<td><strong>Box culvert</strong> (Fig E1)</td>
+<td>Upstream of the crossing, clear of splash</td>
+<td>Debris at inlet, silt on floor</td>
+</tr>
+<tr>
+<td>Smaller crossing</td>
+<td>Pipe culvert (Figs E2 to E4)</td>
+<td>Chamber upstream</td>
+<td>Block at inlet</td>
+</tr>
+<tr>
+<td>Main channel</td>
+<td>Main or second channel</td>
+<td>Stable section with a known height</td>
+<td>Large debris, erosion</td>
+</tr>
+</tbody>
+</table>
+<p>Uganda road drain guide in Eric note: pipe culverts under roads at least <strong>600 mm</strong>. Precast box often <strong>600 mm by 450 mm</strong> (sometimes 450 mm by 400 mm if the flow scours itself). Kampala tables go larger (pipes 750 to 1200 mm. Boxes 1 to 6 m span). <strong>Survey the site.</strong></p>
+<p><strong>First build rule.</strong> An old, stable box culvert or open channel at a <strong>known</strong> flood spot. Not a section about to be rebuilt (Trevor then ranked the rebuilt Nakivubo at St Balikuddembe <strong>low</strong> for a first sensor).</p>
+<h3>6.2 Three ways to sense (Eric comparison drawing)</h3>
+<p><img alt="Figure E5. One box culvert, three ways: 80 GHz radar from the slab, ultrasonic with at least 0.3 m from the wall, pressure in a stilling tube on the floor." src="Research/extracted-figures/eric/image6.png" /></p>
+<p><strong>Figure E5.</strong> Eric comparison. Radar and ultrasonic look down at the water. Pressure sits in the silt. That is why the note rejects it for silt watch.</p>
+<table>
+<thead>
+<tr>
+<th>Way</th>
+<th>Strength</th>
+<th>Weakness in a Kampala drain</th>
+<th>First build</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>80 GHz radar</strong></td>
+<td>Foam, steam, splash. About 2 mm. Tracks silt when dry by a shorter air gap</td>
+<td>Cost. Shop wait</td>
+<td><strong>Later</strong> (Eric field pick)</td>
+</tr>
+<tr>
+<td><strong>Ultrasonic (JSN SR04T)</strong></td>
+<td>Cheap. No contact. Same time of flight idea</td>
+<td>Air heat. Foam. 25 cm blind zone. Wet face</td>
+<td><strong>What we bought and filmed</strong></td>
+</tr>
+<tr>
+<td><strong>Pressure</strong></td>
+<td>Direct depth from the bed</td>
+<td>Buries in silt. Face clogs</td>
+<td>Not for silt watch</td>
+</tr>
+</tbody>
+</table>
+<p><img alt="Figure E6. Field layout Eric likes: 80 GHz radar on the slab, weather box on the bank." src="Research/extracted-figures/eric/image7.png" /></p>
+<p><strong>Figure E6.</strong> Radar only section from the placement note. This is the <strong>field</strong> pick, not what we filmed.</p>
+<p><img alt="Figure E7. Why pressure is rejected for silt: the sensor lies on the floor, in a stilling tube, in the sediment." src="Research/extracted-figures/eric/image8.png" /></p>
+<p><strong>Figure E7.</strong> Pressure install. Eric: sand and mud bury the face. Drift and failure follow.</p>
+<p><img alt="Figure E8. Ultrasonic section. Sound cone, blind zone, silt on the floor, box on the bank." src="Research/extracted-figures/eric/image9.png" /></p>
+<p><strong>Figure E8.</strong> Ultrasonic (what the first build uses). Blind zone <strong>A</strong> must stay above max water. Height <strong>H</strong> and length <strong>L</strong> are taped on site.</p>
+<p>Eric field pick is radar. The team still chose ultrasonic for Phase 3 because Neriko could sell a JSN SR04T the same morning (about UGX 25000) and the IEEE date would not wait on radar. If ultrasonic stays: stilling tube, 30 cm from a rough wall, 30 cm above max water, heat later.</p>
+<p><strong>Where the sensor must not go</strong></p>
+<ul>
+<li>On the floor (silt). See Figure E7.</li>
+<li>In the inlet splash (branches, plastic).</li>
+<li>In the centre of the flow (desilt shovel).</li>
+<li>On a drain about to be dug up.</li>
+<li>In an obvious box that invites theft.</li>
+</ul>
+<h3>6.3 The maths from the calculation file</h3>
+<p>These drawings are from docs/Research/CalculationTabaPort.docx. They are the same formulae the hub and firmware use.</p>
+<p>Distance with no contact (radar or ultrasonic):</p>
+<p>d_measured = (v times t) / 2</p>
+<p>Firmware (SRS): raw_cm = (echo microseconds times 0.0343) / 2. Speed of sound about 343 m/s.</p>
+<p><img alt="Figure E9. Live water depth: H_water = H_sensor minus d_measured. Blind zone marked above the water." src="Research/extracted-figures/calc/image2.png" /></p>
+<p><strong>Figure E9.</strong> Calculation note. H_sensor is the dry tape from probe face to floor. d_measured is the live echo. The laptop and the node both work out H_water. The hub numbers are the source of truth.</p>
+<p><img alt="Figure E10. Dry silt: y_silt = H_sensor minus d_dry." src="Research/extracted-figures/calc/image6.png" /></p>
+<p><strong>Figure E10.</strong> Same shape, dry channel. A lasting shorter air gap is silt on the bed, not a flood. Second build check. First build still needs a clean floor so H_sensor is true.</p>
+<p>Blind zone: radar a few centimetres. Ultrasonic often <strong>5 to 25 cm</strong> (JSN SR04T about 25 cm). The probe must sit high enough that max flood never enters that zone.</p>
+<p>Speed of sound shifts about <strong>0.6 m/s per degree C</strong> (about 1 cm error per 10 C at 50 cm). The field node design adds a heat sensor. The first USB node does not.</p>
+<h3>6.4 Two sensors for a block, and the field system Eric wants</h3>
+<p>Measure water where it has a clear meaning. Do <strong>not</strong> put the main sensor in the trash pile. Watch the <strong>effect</strong> of a block from upstream of the inlet.</p>
+<p><img alt="Figure E11. Radar upstream and downstream. When the crossing is clear, H1 equals H2 and the gap is 0." src="Research/extracted-figures/eric/image11.png" /></p>
+<p><strong>Figure E11.</strong> Block idea. Head gap (H upstream minus H downstream) rises when the crossing holds flow. Second build (two nodes). First build has one node.</p>
+<p><img alt="Figure E12. Eric first field system: slab radar, outdoor box, solar, compare up and down stream, wireless flood and block alert." src="Research/extracted-figures/eric/image12.png" /></p>
+<p><strong>Figure E12.</strong> Field target after the IEEE video. Not what we filmed. First build is USB plus ultrasonic plus laptop.</p>
+<h3>6.5 How the sensor is fixed to the slab (calculation note)</h3>
+<p><img alt="Figure E13. Ceiling mount: steel L bracket, rubber gasket, M8 or M10 wedge anchors, 1.5 inch swivel, sealed conduit, drip loop, junction box. Radar or ultrasonic housing." src="Research/extracted-figures/calc/image9.png" /></p>
+<p><strong>Figure E13.</strong> Calculation note. Suggested install. Probe straight at the water. At least 0.3 m from a rough wall. Downstream of the inlet splash. Blind zone clear of max flood. Cable in conduit with a drip loop <strong>before</strong> the box.</p>
+<p><img alt="Figure E14. M8 or M10 wedge anchors for the slab fixings." src="Research/extracted-figures/calc/image10.png" /></p>
+<p><strong>Figure E14.</strong> Wedge anchors from the calculation note (that file labels this "Figure 1: M8/M10 wedge expansion anchors"). First build used a plank and cable ties across a small campus drain. This drawing is the public culvert mount, after permission.</p>
+<h3>6.6 Threats and what we do</h3>
+<table>
+<thead>
+<tr>
+<th>Threat</th>
+<th>What happens</th>
+<th>What we did or plan</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Splash and waves</td>
+<td>Unstable ultrasonic</td>
+<td>Away from inlet. Plank mount. Stilling tube later</td>
+</tr>
+<tr>
+<td>Trash</td>
+<td>Spike or strike</td>
+<td>Median of 5 plus 10 cm gate (Phase 2 filter, live)</td>
+</tr>
+<tr>
+<td>Silt</td>
+<td>Pressure sensor dies. Floor changes</td>
+<td>Overhead only. Dry y_silt later</td>
+</tr>
+<tr>
+<td>Sun and UV</td>
+<td>Box dies</td>
+<td>Lunch box for the video. Outdoor box later</td>
+</tr>
+<tr>
+<td>Theft</td>
+<td>Whole node gone</td>
+<td>Bank box. Short film. No public install</td>
+</tr>
+<tr>
+<td>Desilt</td>
+<td>Crew hits the probe</td>
+<td>Outside the shovel path. Talk to the crew</td>
+</tr>
+<tr>
+<td>Building work</td>
+<td>Shape changes</td>
+<td>Eric and Trevor: skip rebuilt sections</td>
+</tr>
+</tbody>
+</table>
+<p>KCCA already clears silt by hand and machine and works with communities. The box has to survive <strong>maintenance</strong>, not only rain.</p>
+<h3>6.7 First build wiring (what Eric and Shakiran built)</h3>
+<p><img alt="Figure E15. Tank and drain node wiring. ESP32, JSN SR04T, echo divider, LEDs, buzzer." src="phase3/tank-node-wiring.png" /></p>
+<p><strong>Figure E15.</strong> Printable wiring for the video node. VIN (5 V) to the JSN SR04T, <strong>not</strong> 3V3. Echo is 5 V. 1 k ohm and 2 k ohm divider into GPIO 18.</p>
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th>ESP32 pin</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Sensor power</td>
+<td>VIN (5 V from USB)</td>
+</tr>
+<tr>
+<td>Trig</td>
+<td>GPIO 5. 20 us every 500 ms</td>
+</tr>
+<tr>
+<td>Echo</td>
+<td>GPIO 18 via divider</td>
+</tr>
+<tr>
+<td>Green, yellow, red LED</td>
+<td>GPIO 25, 26, 27 plus 220 ohm</td>
+</tr>
+<tr>
+<td>Buzzer</td>
+<td>GPIO 14. One beep on red</td>
+</tr>
+</tbody>
+</table>
+<p>Mount rules (Eric, used on film day): face straight down (within 5 degrees). At least 30 cm above highest water. At least 30 cm from a rough wall. Plank weighted. Electronics in the lidded box. USB taped so feet do not pull it, unless we pull it <strong>on purpose</strong> for the unknown shot.</p>
+<p><strong>Parts (Neriko, Wandegeya, October 2026, plus or minus 20 percent):</strong> two ESP32 about UGX 120000. JSN SR04T about 25000. USB C <strong>data</strong> cable about 20000. Tape, box, plank about 33000. <strong>About UGX 198000</strong> with a spare board. <strong>About 138000</strong> with one. LEDs, buzzer, breadboard, resistors from the Arduino kit. Not buying: radar, LoRa, GSM, solar.</p>
+<h2>7. Mugisha Trevour Jeanclaude: where, and which map is true enough</h2>
+<p><strong>Source:</strong> docs/Research/TabaPort_GIS_Component_Report_to_MIIC_Mugisha_Trevour.pdf (28 September 2026).<br />
+<strong>Code:</strong> TabaPort_GIS_Code/ (AHP, Earth Engine notes).</p>
+<p>Maps answer one word for the whole product: <strong>where.</strong> A flood is a <strong>stretch of road</strong>, not a pin. The hub colours a segment_id, not one lat lon.</p>
+<h3>7.1 What the map work delivered</h3>
+<ul>
+<li>A list of <strong>17</strong> known flood places across <strong>three valley systems</strong>.</li>
+<li>A flood score in Google Earth Engine on open data (AHP weights, consistency ratio <strong>0.007</strong>).</li>
+<li>A <strong>short list of five</strong> first sensor sites, led by Mulago roundabout and Kalerwe.</li>
+<li>A survey method that turns each echo into a water <strong>height</strong> on one datum (for a later trial).</li>
+<li>Every map file the laptop needs, made before the rain.</li>
+</ul>
+<p>The centimetre shape is already drawn in Eric calculation figures (E9, E10, E13). A later trial still needs GNSS so those centimetres become heights. First build uses centimetres on one drain.</p>
+<h3>7.2 The 17 place list</h3>
+<p>Points are Wikipedia place (W) or author guess (E, about 500 m). <strong>Guess until GNSS.</strong> Basins wait until flow direction is confirmed.</p>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Place</th>
+<th>Division</th>
+<th>Basin (guess)</th>
+<th>Lat, Lon</th>
+<th>Why it floods</th>
+<th>Trial</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>TP 01</td>
+<td>Clock Tower junction (Entebbe Rd / Queensway)</td>
+<td>Central</td>
+<td>Nakivubo</td>
+<td>0.3095, 32.5785</td>
+<td>Valley floor below Nakasero. Roads meet on one low crossing</td>
+<td>High</td>
+</tr>
+<tr>
+<td>TP 02</td>
+<td>Bwaise</td>
+<td>Kawempe</td>
+<td>Lubigi via Nsooba</td>
+<td>0.3500, 32.5611</td>
+<td>Old wetland about 1180 m. Dense homes on the drain</td>
+<td>High</td>
+</tr>
+<tr>
+<td>TP 03</td>
+<td>Kalerwe market (Bombo / Gayaza)</td>
+<td>Kawempe</td>
+<td>Lubigi via Nsooba</td>
+<td>0.3525, 32.5720</td>
+<td>Market on the Nsooba line. Heavy waste into drains</td>
+<td>High</td>
+</tr>
+<tr>
+<td>TP 04</td>
+<td>Mulago roundabout</td>
+<td>Kawempe</td>
+<td>Lubigi via Nsooba</td>
+<td>0.3395, 32.5745</td>
+<td>Dip at the foot of Mulago Hill beside the national hospital</td>
+<td>High</td>
+</tr>
+<tr>
+<td>TP 05</td>
+<td>Kubiri roundabout (Bombo Rd)</td>
+<td>Kawempe</td>
+<td>Lubigi via Nsooba</td>
+<td>0.3460, 32.5690</td>
+<td>Low junction Wandegeya to Bwaise</td>
+<td>Medium</td>
+</tr>
+<tr>
+<td>TP 06</td>
+<td>Northern Bypass at Lubigi wetland</td>
+<td>Kawempe / Rubaga</td>
+<td>Lubigi</td>
+<td>0.3470, 32.5500</td>
+<td>Highway on the wetland floor. Not high ground <strong>here</strong></td>
+<td>High</td>
+</tr>
+<tr>
+<td>TP 07</td>
+<td>Nakivubo at St Balikuddembe</td>
+<td>Central</td>
+<td>Nakivubo</td>
+<td>0.3110, 32.5775</td>
+<td>Crowded CBD channel. Rebuilt to 12 m by March 2026</td>
+<td><strong>Low</strong> (rebuilt)</td>
+</tr>
+<tr>
+<td>TP 08</td>
+<td>Lugogo Bypass</td>
+<td>Nakawa / Central</td>
+<td>Nakivubo (Lugogo)</td>
+<td>0.3285, 32.5990</td>
+<td>Low road along the Lugogo feeder</td>
+<td>Medium</td>
+</tr>
+<tr>
+<td>TP 09</td>
+<td>Mukwano Rd near Kibuli</td>
+<td>Central / Makindye</td>
+<td>Nakivubo</td>
+<td>0.3070, 32.5930</td>
+<td>Industry valley floor</td>
+<td>Medium</td>
+</tr>
+<tr>
+<td>TP 10</td>
+<td>Nateete (Old Masaka Rd)</td>
+<td>Rubaga</td>
+<td>Nalukolongo</td>
+<td>0.2983, 32.5350</td>
+<td>Valley road about 1190 m on Nalukolongo head waters</td>
+<td>Medium</td>
+</tr>
+<tr>
+<td>TP 11</td>
+<td>Nalukolongo channel</td>
+<td>Rubaga</td>
+<td>Nalukolongo</td>
+<td>0.2960, 32.5490</td>
+<td>Channel reported too small (Parliament July 2026)</td>
+<td>High</td>
+</tr>
+<tr>
+<td>TP 12</td>
+<td>Ndeeba</td>
+<td>Rubaga</td>
+<td>Nalukolongo</td>
+<td>0.2940, 32.5610</td>
+<td>Low shops, Masaka Rd</td>
+<td>Medium</td>
+</tr>
+<tr>
+<td>TP 13</td>
+<td>Kinawataka</td>
+<td>Nakawa</td>
+<td>Kinawataka</td>
+<td>0.3350, 32.6330</td>
+<td>Swamp floor, main channel</td>
+<td>Medium</td>
+</tr>
+<tr>
+<td>TP 14</td>
+<td>Kyambogo</td>
+<td>Nakawa</td>
+<td>Kinawataka</td>
+<td>0.3480, 32.6290</td>
+<td>Low ground below Kyambogo hill</td>
+<td>Medium</td>
+</tr>
+<tr>
+<td>TP 15</td>
+<td>Ntinda (factory close)</td>
+<td>Nakawa</td>
+<td>to confirm</td>
+<td>0.3550, 32.6144</td>
+<td>Valley between Ntinda and Naguru</td>
+<td>Medium</td>
+</tr>
+<tr>
+<td>TP 16</td>
+<td>Kansanga / Ggaba</td>
+<td>Makindye</td>
+<td>Kansanga</td>
+<td>0.2872, 32.6078</td>
+<td>Kansanga swamp line</td>
+<td>Medium</td>
+</tr>
+<tr>
+<td>TP 17</td>
+<td>Port Bell</td>
+<td>Nakawa</td>
+<td>Lake shore</td>
+<td>0.2890, 32.6530</td>
+<td>About 1135 m. Lake back water</td>
+<td>Low</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Three valley systems</strong></p>
+<ol>
+<li><strong>North (Lubigi / Nsooba):</strong> Bwaise, Kalerwe, Kubiri, Mulago, Northern Bypass.</li>
+<li><strong>Centre (Nakivubo):</strong> Clock Tower, Nakivubo, Mukwano, Lugogo.</li>
+<li><strong>South west (Nalukolongo):</strong> Nateete, Nalukolongo, Ndeeba.</li>
+</ol>
+<p><strong>A natural sensor chain.</strong> Mulago to Kubiri to Kalerwe to Bwaise look like one line. If flow direction confirms it, an upstream node gives minutes of warning down stream. From "where is water now" to "where will water be next."</p>
+<p><strong>First sensor short list</strong> (site check and KCCA permission still required):</p>
+<ol>
+<li>TP 04 Mulago roundabout (hospital access, top of the north chain)</li>
+<li>TP 03 Kalerwe (named in every team file)</li>
+<li>TP 01 Clock Tower (headline flood spot. Check current KCCA works)</li>
+<li>TP 11 Nalukolongo (channel too small, Parliament July 2026)</li>
+<li>TP 02 Bwaise (down stream end of the chain)</li>
+</ol>
+<p>Place pick follows Eric placement note (Figs E1, E5, E13): old stable structure, not a rebuild, not the trash zone.</p>
+<h3>7.3 Flood score (Google Earth Engine)</h3>
+<p>The model scores every <strong>30 m</strong> cell of Kampala from 0 (dry ridge) to 1 (valley floor). Open Earth Engine data only.</p>
+<table>
+<thead>
+<tr>
+<th>Factor</th>
+<th>Data</th>
+<th>Direction</th>
+<th>Weight</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Height above nearest drain (HAND)</td>
+<td>MERIT Hydro v1.0.1</td>
+<td>Lower = more at risk</td>
+<td><strong>0.316</strong></td>
+</tr>
+<tr>
+<td>Low point (local hollow)</td>
+<td>Copernicus DEM GLO 30</td>
+<td>Deeper hollow = more at risk</td>
+<td>0.197</td>
+</tr>
+<tr>
+<td>Wetness index</td>
+<td>MERIT Hydro</td>
+<td>Wetter = more at risk</td>
+<td>0.184</td>
+</tr>
+<tr>
+<td>Distance to drain</td>
+<td>MERIT Hydro</td>
+<td>Nearer = more at risk</td>
+<td>0.107</td>
+</tr>
+<tr>
+<td>Hard ground</td>
+<td>Dynamic World V1</td>
+<td>More sealed = more at risk</td>
+<td>0.107</td>
+</tr>
+<tr>
+<td>Slope</td>
+<td>Copernicus DEM GLO 30</td>
+<td>Flatter = more at risk</td>
+<td>0.057</td>
+</tr>
+<tr>
+<td>Rain extremes</td>
+<td>CHIRPS Daily, 1995 to 2025</td>
+<td>Wetter = more at risk</td>
+<td>0.032</td>
+</tr>
+<tr>
+<td>Consistency ratio</td>
+<td>Saaty method</td>
+<td>Limit 0.10</td>
+<td><strong>0.007</strong></td>
+</tr>
+</tbody>
+</table>
+<p>HAND and hollows carry the weight because, across 15 km, <strong>rain differs little</strong> while height above the drain differs a lot. Coded in TabaPort_GIS_Code/ahp.py (static score plus the three IEEE rank weights: rise rate, key buildings, people).</p>
+<p><strong>Honest limit on satellites.</strong> Sentinel 1 before and after March 2025, October 2025 and July 2026 can map <strong>standing</strong> water. Radar repeats every 6 to 12 days and fails between tall buildings, so it <strong>misses Kampala flash floods that drain in hours</strong>. That limit <strong>is</strong> the case for TabaPort: space cannot see the event. A probe in the culvert can.</p>
+<p>Test written in the GIS report: at least <strong>12 of 17</strong> list points in the top two classes.</p>
+<h3>7.4 Map files with no internet (what Sharif hub loads)</h3>
+<p>All map work happens <strong>before</strong> the rain. The laptop needs no GIS server, no cloud tiles, no API key. Sharif stack research picked Leaflet, local tiles and GeoJSON for the same reason.</p>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Contents</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>road_segments.geojson</td>
+<td>Roads cut into segments with IDs and flood fields</td>
+</tr>
+<tr>
+<td>blackspots.geojson</td>
+<td>TP 01 to TP 17</td>
+</tr>
+<tr>
+<td>Local tiles</td>
+<td>Context under the segments</td>
+</tr>
+<tr>
+<td>Gazetteer</td>
+<td>Place names and aliases to a segment plus a 100 m circle</td>
+</tr>
+</tbody>
+</table>
+<p>Human reports have no GPS. The gazetteer snaps <em>"Kalerwe mkt flooded"</em> to TP 03 / the Kalerwe segment.</p>
+<p>Phase 2 named the Northern Bypass as high ground. Trevor list marks the <strong>Lubigi stretch of that Bypass (TP 06) as a flood spot</strong>. So "take the Bypass" is not a blanket rule. High ground is measured per segment, not assumed from the road name.</p>
+<h3>7.5 Map limits we state</h3>
+<ul>
+<li>A 30 m height model cannot see a kerb or a one metre dip. The score points the survey. It is not a water model.</li>
+<li>13 of 17 points are guesses until GNSS.</li>
+<li>OSM is thin in Bwaise and Kalerwe (YouthMappers map days later).</li>
+<li>No field install without written KCCA permission.</li>
+</ul>
+<h2>8. Sharif: stack, data, job flow, and the SRS</h2>
+<p><strong>Sources:</strong> docs/Research/Sharif_Research.docx (Stack and Data, April 2026). docs/SRS.md and docs/TabaPort_SRS.docx.</p>
+<p>Question the software research answered: <em>what can we honestly code by the deadline, and how does it stay offline when the phone network fails?</em></p>
+<h3>8.1 Map options with no internet</h3>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Strength</th>
+<th>Why it waited or won</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Static PNG only</td>
+<td>Zero code</td>
+<td>No pan, zoom, or click</td>
+</tr>
+<tr>
+<td>SpatiaLite</td>
+<td>Real space SQL</td>
+<td>Extra install. Too much for 69 points. Phase 2 named it. We did the map work <strong>before</strong> the rain instead</td>
+</tr>
+<tr>
+<td>MapLibre GL</td>
+<td>Modern vectors</td>
+<td>Needs a tile pipe we did not have</td>
+</tr>
+<tr>
+<td>PWA</td>
+<td>Right long term form</td>
+<td>Extra work for a laptop desk</td>
+</tr>
+<tr>
+<td><strong>Leaflet, local tiles, GeoJSON</strong></td>
+<td>Small core. Segments you can edit by hand. leaflet.offline</td>
+<td><strong>Won</strong></td>
+</tr>
+</tbody>
+</table>
+<p>The laptop runs Flask. Leaflet, tiles and GeoJSON live on disk. Dispatcher opens http://localhost:5000. No CDN. No key.</p>
+<h3>8.2 Data model (four tables, built as specified)</h3>
+<p>Everything in one SQLite file, WAL mode. Nothing personal goes to a cloud.</p>
+<p><strong>node_reading:</strong> reading_id, node_id, time, water_level_cm, rise rate, filtered_flag, raw ultrasonic.</p>
+<p><strong>road_segment_state:</strong> segment_id, optional node_id, state (green, yellow, red, unknown), last_updated, source (sensor, human_report, dispatcher).</p>
+<p><strong>job:</strong> job_id, segment_id, optional alert_id, assigned_crew, status (open, acked, en_route, on_site, closed, false_alarm), times, false_alarm_reason.</p>
+<p><strong>human_report:</strong> type (blockage, flooding, road_impassable, clear), note, <strong>reporter_hash only</strong>.</p>
+<p>Privacy: salted SHA 256 of the phone number at the gateway. Uganda Data Protection and Privacy Act treats phone numbers as personal data. UCC SMS guide flags privacy. Raw numbers are not in SQLite or CSV.</p>
+<h3>8.3 Node to hub</h3>
+<table>
+<thead>
+<tr>
+<th>Link</th>
+<th>Range and rate</th>
+<th>Verdict</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>USB serial and PySerial</strong></td>
+<td>About 5 m, 115200, one cable</td>
+<td><strong>First build</strong></td>
+</tr>
+<tr>
+<td>WiFi / MQTT</td>
+<td>Wireless, broker, reconnect</td>
+<td>Second build (field node sim uses MQTT as a stand in)</td>
+</tr>
+<tr>
+<td>LoRa</td>
+<td>Private, needs a gateway</td>
+<td>Research only</td>
+</tr>
+<tr>
+<td>GSM SMS</td>
+<td>Works where the cell works. Costs. Jams in storms</td>
+<td>Human reports later, not the node</td>
+</tr>
+</tbody>
+</table>
+<p>JSON line, new line at the end, json.loads on the laptop:</p>
+<pre><code>{&quot;node_id&quot;:&quot;drain_01&quot;,&quot;raw_cm&quot;:41.2,&quot;level_cm&quot;:8.8,&quot;filtered&quot;:false,&quot;state&quot;:&quot;green&quot;,&quot;ok&quot;:true}
+</code></pre>
+<p>Hub is source of truth. CFG back to the node:</p>
+<pre><code>CFG h_sensor=60.0 yellow=30.0 red=48.0
+</code></pre>
+<h3>8.4 After the alert (software)</h3>
+<p>A <strong>job</strong> is the work order. An <strong>alert</strong> is the signal. One alert makes one job. A human report can open a job with no sensor.</p>
+<table>
+<thead>
+<tr>
+<th>Step</th>
+<th>What happens</th>
+<th>Job status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Node at Clock Tower reads 25 cm, rising 6 cm per min</td>
+<td></td>
+</tr>
+<tr>
+<td>2</td>
+<td>Hub creates alert and job</td>
+<td>open</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Dispatcher assigns Team A</td>
+<td>open (owned)</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Team A on radio. Dispatcher Ack</td>
+<td>acked</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Crew arrives, clears inlet</td>
+<td>en route, then on site</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Sensor reads 8 cm. Close</td>
+<td>closed</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Segment green <strong>because the sensor said so</strong></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>If step 5 is only a log: False Alarm, reason logged, filter tuned later. With no clear false alarm path, dispatchers stop trusting the board.</p>
+<p>Job list: unacked first. One click Assign, Ack, Close, False Alarm. No confirm popups.</p>
+<h3>8.5 Uganda SMS and USSD, and why cell broadcast is not ours</h3>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Cost (Sharif 2026 research)</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Shared shortcode plus keyword</td>
+<td>About UGX 200000 setup</td>
+<td>Hours after KYC, not months</td>
+</tr>
+<tr>
+<td>Reverse billing in</td>
+<td>About UGX 65 per message</td>
+<td>Rider pays nothing</td>
+</tr>
+<tr>
+<td>Bulk SMS out</td>
+<td>About UGX 30 to 55 per message</td>
+<td>Volume and sender ID</td>
+</tr>
+<tr>
+<td>Dedicated shortcode</td>
+<td>UCC USD 295 plus USD 2360 a year plus telco setup</td>
+<td>About 2 months. Not first build</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Cell broadcast</strong> is out of scope for three reasons Sharif wrote down:</p>
+<ol>
+<li>UCC treats emergency area alerts as a <strong>government</strong> function, not a student board service.</li>
+<li>There is no Cell Broadcast Centre we can buy.</li>
+<li>Cell broadcast is one way. We need a rider to <strong>send</strong> a report.</li>
+</ol>
+<p>Phase 2 "zero cost SMS to every phone in 2 km" stays in the idea as a <strong>UCC, MTN, Airtel partnership</strong>. The video does not pretend to do it.</p>
+<h3>8.6 SRS lock (October 2026)</h3>
+<p>Sharif wrote the SRS. It is the build contract: JSON and CFG, REST, tables, tests AC 01 to AC 12.</p>
+<p><strong>In scope:</strong> one USB node, laptop hub, Leaflet with no internet, SQLite, Flask, four states, job life, typed reports, USB pull unknown demo.</p>
+<p><strong>Out of scope:</strong> LoRa and GSM, Pi hub, cloud tiles or DB, cell broadcast, KCCA system join, auto USSD, solar.</p>
+<p>One reading (SRS 3.2): TRIG, then echo, then firmware median, then level_cm, then JSON, then PySerial, then hub median, then hub calibration, then class, then SQLite, then /api/state every 2 s, then Leaflet and jobs table.</p>
+<h2>9. What we built: the first prototype (with the screens)</h2>
+<p>Folder: prototype/app (hub) and prototype/sysmatic/tank_node (firmware).</p>
+<p>Firmware (Shakiran): ESP IDF, 2 Hz, median of 5, 10 cm spike gate, JSON, LEDs, beep on red. The laptop <strong>works out depth again</strong> from the raw echo so a wrong setting on the node cannot lie to the map.</p>
+<h3>9.1 Live node</h3>
+<p><img alt="Figure 12. Live node screen. Raw and filtered depth, spike dots, yellow and red lines." src="../images/image.png" /></p>
+<p><strong>Figure 12.</strong> Live node. Grey is raw. Blue is filtered depth used for state. Orange dots are spikes removed (the Phase 2 plastic bottle filter, on screen). Yellow and red lines are Joel centimetres. Fake serial slider in this shot is for rehearsal. The IEEE tape uses the real USB node.</p>
+<h3>9.2 Map</h3>
+<p><img alt="Figure 13. Map with no internet. Campus drain red. Flood place list. Field report box." src="../images/Map.png" /></p>
+<p><strong>Figure 13.</strong> Map. Campus drain (drain_01) red. Purple dots are Trevor list (Clock Tower, Kalerwe, Bwaise, Mulago, Nalukolongo). Grey is unknown (no node). Field report box: a typed "Kalerwe mkt flooded" snaps through the gazetteer. Legend: green passable, yellow send crew, red close lane, grey no data.</p>
+<h3>9.3 Jobs</h3>
+<p><img alt="Figure 14. Jobs screen. Red campus drain and an unknown Mulago report." src="../images/image1.png" /></p>
+<p><strong>Figure 14.</strong> Jobs. Open job 3: campus drain <strong>red</strong> at 16.1 cm. <em>"Ask traffic police to close lane. Send drainage crew to clear inlet."</em> Open job 4: Mulago roundabout <strong>unknown</strong>. <em>"Send drainage crew to check inlet."</em> Unacked rows flash after 3 minutes. Buttons: assign, acknowledge, close, false alarm.</p>
+<p>That is Joel language on Sharif table on Trevor place names, driven by Eric and Shakiran node.</p>
+<h2>10. Shakiran: firmware, join, IEEE, phone</h2>
+<p>After Phase 2 the lead job was not a new slogan. It was: keep the team on <strong>one</strong> first build slice, write firmware a real drain can drive, and put a person on the product.</p>
+<p><strong>What we will not show in the IEEE video:</strong> Wokwi, slides, a fake graph sold as a drain, cell broadcast, a city scale dashboard.</p>
+<p><strong>Phone app (extra).</strong> Flutter client, same REST API (prototype/mobile/). A physical phone starts at the public hub URL. The Linux desk stays on 127.0.0.1:5000. The Phase 3 tape is the <strong>laptop</strong>.</p>
+<p><strong>Field node (sim only).</strong> prototype/sysmatic/field_node. Heat sensor, battery, tilt, clock, LCD, microSD queue, MQTT stand in. Questions for a WSN teacher (power, LoRa versus GSM, box, lightning) are in docs/phase3/field-node-brief.md. <strong>Not Phase 3 proof.</strong></p>
+<h2>11. The Phase 3 video</h2>
+<p><strong>Rule:</strong> a real person, a working product, 2 to 5 minutes. No sim. No stock. No AI video.</p>
+<table>
+<thead>
+<tr>
+<th>Role on the day</th>
+<th>Person</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Drain, probe, crew</td>
+<td>Eric</td>
+</tr>
+<tr>
+<td>Laptop, dispatcher</td>
+<td>Shakiran</td>
+</tr>
+<tr>
+<td>Camera 1 and site</td>
+<td>Trevor</td>
+</tr>
+<tr>
+<td>Water, timing, second camera</td>
+<td>Joel</td>
+</tr>
+<tr>
+<td>Hub standby</td>
+<td>Sharif</td>
+</tr>
+</tbody>
+</table>
+<p>Shot list (aim about 3 min 30): wide drain, plank, box. Live node green, WiFi off. Pour to yellow, assign, ack. Pour to red, beep, map red. Crew clears inlet, sensor turns green, close. USB pull, grey unknown, plug back. Optional gazetteer and route that skips red. Team end card with the <strong>five names</strong>.</p>
+<h2>12. What we are not claiming</h2>
+<ul>
+<li>That TabaPort stops flooding.</li>
+<li>That ultrasonic in a dirty <strong>public</strong> culvert is already good enough for live KCCA dispatch. That needs a 30 day trial beside patrol reports.</li>
+<li>Cell broadcast to every phone in 2 km.</li>
+<li>A public drain install. KCCA asset. Written permission first.</li>
+<li>That the Phase 2 US$55 solar radio node is what we filmed. We filmed a USB node.</li>
+<li>That we have already sat with a KCCA drainage engineer. We have not.</li>
+<li>That the 30 m score surface is a water model.</li>
+</ul>
+<h2>13. Next</h2>
+<ol>
+<li>Keep the first build as the SRS reference.</li>
+<li>Ask Dr Mary Nsabagwa, Makerere CoCIS (embedded and WSN, WIMEA ICT weather stations) to mark the <strong>field</strong> node. Read <a href="https://doi.org/10.1016/j.deveng.2018.100040">Nsabagwa et al. 2019</a> and <a href="https://publications.eai.eu/index.php/IoT/article/view/661">2018 condition watch</a> first. Brief: docs/phase3/field-node-brief.md. Her four tests: reliability, accuracy, power, send. <strong>Cost after those.</strong></li>
+<li>Then a 20 minute KCCA Engineering <strong>talk</strong> (not a money ask): how reports reach crews today. Which 5 of 69 first. Whether a gentle demo on their land is ok.</li>
+<li>One real flood spot, 30 days, side by side with patrols.</li>
+</ol>
+<h2>14. Files to send with the video</h2>
+<ul>
+<li>This report as PDF</li>
+<li>SRS: docs/TabaPort_SRS.docx or print of docs/SRS.md</li>
+<li>Phase 2 PDF: docs/phase2/QM_Idea_5267_08_23_2026.pdf</li>
+<li>Research originals</li>
+<li>docs/Research/Sharif_Research.docx</li>
+<li>docs/Research/TabaPort_eric.docx</li>
+<li>docs/Research/CalculationTabaPort.docx</li>
+<li>docs/Research/TabaPort_GIS_Component_Report_to_MIIC_Mugisha_Trevour.pdf</li>
+<li>docs/phase3/thresholds-and-words.md</li>
+<li>docs/phase3/wiring.md and docs/phase3/bom.md</li>
+<li>IEEE upload confirm screen shot</li>
+<li>Team photo or end card with the five names</li>
+</ul>
+<h2>15. Combined references</h2>
+<h3>Team files</h3>
+<ol>
+<li>TabaPort team (entrant: Shakiran Nannyombi). Phase 2 idea. Tabaport: On Site Edge Intelligence and Dispatch System for Urban Flash Floods. IEEE Response Quest 5267, 24 May 2026. docs/phase2/QM_Idea_5267_08_23_2026.pdf</li>
+<li>Sharif. Software Requirements Specification, TabaPort first build. October 2026. docs/SRS.md</li>
+<li>Sharif. TabaPort Research Document: Stack and Data. April 2026. docs/Research/Sharif_Research.docx</li>
+<li>Eric. Drainage Sensor Placement for Urban Flood Monitoring. docs/Research/TabaPort_eric.docx</li>
+<li>Eric. Time of flight, H_water, y_silt, blind zone and mount. docs/Research/CalculationTabaPort.docx</li>
+<li>Mugisha Trevour Jeanclaude. TabaPort: GIS and Geomatics Component. Report to MIIC TES, 28 September 2026. docs/Research/TabaPort_GIS_Component_Report_to_MIIC_Mugisha_Trevour.pdf</li>
+<li>Joel. Thresholds, job wording and the dispatcher lines. docs/phase3/thresholds-and-words.md</li>
+<li>TabaPort team. MIIC TES concept note. docs/miic-tes-concept-note.md</li>
+<li>TabaPort team. Research week brief. docs/phase3/team-research-week.md</li>
+<li>TabaPort team. Wiring, BOM, shot list. docs/phase3/wiring.md, bom.md, rehearsal-and-shotlist.md</li>
+</ol>
+<h3>News and agencies (posts we used)</h3>
+<ol start="11">
+<li>KCCA. Drain and flood ready update (waste and silt). https://www.kcca.go.ug/news/1154/</li>
+<li>UBC. KCCA steps up drainage works to tackle flooding in Kampala. 12 August 2026. https://ubc.go.ug/2026/08/12/kcca-steps-up-drainage-works-to-tackle-flooding-in-kampala/</li>
+<li>Daily Monitor. Parliament gives KCCA 7 days to explain Kampala flooding. https://www.monitor.co.ug/uganda/news/national/parliament-gives-kcca-7-days-to-explain-kampala-flooding-5543126</li>
+<li>NTV. KCCA urges land donation to solve Kampala flooding. https://ntv.co.ug/news/kcca-urges-land-donation-to-solve-kampala-flooding</li>
+<li>OpenStreetMap Uganda. https://www.openstreetmap.org</li>
+<li>Uganda National Meteorological Authority (climate context, Phase 2 form).</li>
+<li>KCCA Strategic Plan 2025/26 to 2029/30. Drain and flood spot programmes (Eric).</li>
+<li>Ministry of Works and Transport. Road Design Manual Volume II: Drainage Design Manual. 2010 (culvert minima cited by Eric. Confirm the current official PDF before you quote to KCCA).</li>
+</ol>
+<h3>Technical papers</h3>
+<ol start="19">
+<li>Nsabagwa, M., Byamukama, M., Kondela, E., and Otim, J. S. (2019). Towards a robust and affordable Automatic Weather Station. Development Engineering, 4, 100040. https://doi.org/10.1016/j.deveng.2018.100040</li>
+<li>Nsabagwa, M., Sansa Otim, J., Nyongarwizi Akol, R., et al. (2018). Condition Monitoring for Wireless Sensor Network Based Automatic Weather Stations. EAI Endorsed Transactions on Internet of Things, 4(14), e4. https://publications.eai.eu/index.php/IoT/article/view/661</li>
+<li>Toa, M., and Whitehead, A. (2021). Ultrasonic sensing basics (SLAA907D). Texas Instruments. (Eric)</li>
+<li>Omega Engineering. LVCN210, LVCN318 and LVCN414 ultrasonic user guide, M4462. (Eric)</li>
+<li>Hunan MAC Sensor. How to use, install and maintain ultrasonic level sensor. 2025. https://www.macsensor.com/info/how-to-use-install-and-maintain-ultrasonic-le-103166307.html</li>
+<li>Icon Process Controls. Guide to radar liquid level sensors. 2025. https://iconprocon.com/blog_post/a-complete-guide-to-radar-liquid-level-sensors-precision-measurement-for-complex-applications/</li>
+<li>JSN SR04T data sheet (blind zone, beam, cable. Use the sheet that came with the part).</li>
+<li>Uganda Data Protection and Privacy Act. Phone numbers as personal data.</li>
+<li>IEEE Response Quest Challenge rules. Real person, working product, 2 to 5 minutes.</li>
+<li>Saaty AHP and Earth Engine inputs: MERIT Hydro, Copernicus DEM GLO 30, Dynamic World, CHIRPS (Trevor).</li>
+</ol>
+<h2>Sign off</h2>
+<p>We confirm this report describes research and a prototype the team actually made after the Phase 2 idea. KCCA and UNDP numbers are labelled as theirs. Yellow and red centimetres are <strong>our</strong> rule from site shape, not a published national flood table.</p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Role</th>
+<th>Date</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Shakiran Nannyombi</td>
+<td>Lead and firmware</td>
+<td>7 October 2026</td>
+</tr>
+<tr>
+<td>Joel</td>
+<td>Bands and dispatch words</td>
+<td>7 October 2026</td>
+</tr>
+<tr>
+<td>Eric</td>
+<td>Drain and hardware</td>
+<td>7 October 2026</td>
+</tr>
+<tr>
+<td>Mugisha Trevour Jeanclaude</td>
+<td>Maps</td>
+<td>7 October 2026</td>
+</tr>
+<tr>
+<td>Sharif</td>
+<td>Software and SRS</td>
+<td>7 October 2026</td>
+</tr>
+</tbody>
+</table></body></html>

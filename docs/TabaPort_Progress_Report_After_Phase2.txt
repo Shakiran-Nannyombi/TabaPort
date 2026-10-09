@@ -1,0 +1,4 @@
+The report is now:
+
+  Markdown: docs/TabaPort_Progress_Report_After_Phase2.md
+  PDF:      docs/TabaPort_RQ5267_Phase3_Progress_Report.pdf
