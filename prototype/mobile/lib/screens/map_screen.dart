@@ -84,18 +84,35 @@ class _MapScreenState extends State<MapScreen> {
       final level = n['level_cm'];
       final label = level == null ? '$nodeId · $st' : '$nodeId · $st · ${(level as num).toStringAsFixed(1)} cm';
       markers.add(Marker(
+        key: ValueKey('$nodeId-$st-$level'),
         point: LatLng((mid[1] as num).toDouble(), (mid[0] as num).toDouble()),
-        width: 22,
-        height: 22,
-        child: Tooltip(
-          message: label,
-          child: Container(
-            decoration: BoxDecoration(
-              color: stateColor(st),
-              shape: BoxShape.circle,
-              border: Border.all(color: const Color(0xFF1A2330), width: 2),
+        width: 210,
+        height: 28,
+        alignment: Alignment.centerLeft,
+        child: Row(
+          children: [
+            Container(
+              width: 18,
+              height: 18,
+              decoration: BoxDecoration(
+                color: stateColor(st),
+                shape: BoxShape.circle,
+                border: Border.all(color: const Color(0xFF1A2330), width: 2),
+              ),
             ),
-          ),
+            const SizedBox(width: 6),
+            Flexible(
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                color: const Color(0xF2FFFFFF),
+                child: Text(
+                  label,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w800, color: Colors.black),
+                ),
+              ),
+            ),
+          ],
         ),
       ));
     }

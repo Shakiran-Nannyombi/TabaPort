@@ -30,10 +30,29 @@ _raw_window = {}         # node_id -> deque of last 5 raw cm (hub-side median, s
 SPIKE_CM = 10.0
 _listeners = []          # callbacks(event_dict) e.g. send CFG to node
 _lock = threading.Lock()
+_cond = threading.Condition()
+_rev = 0
 
 
 def now_iso():
     return datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S")
+
+
+def touch():
+    """Wake map listeners. Called after a reading or a silence timeout."""
+    global _rev
+    with _cond:
+        _rev += 1
+        _cond.notify_all()
+
+
+def wait_rev(seen, timeout=12):
+    """Block until the revision changes, or until timeout. Returns the current revision."""
+    with _cond:
+        if _rev != seen:
+            return _rev
+        _cond.wait(timeout)
+        return _rev
 
 
 def segment_for(node_id):
@@ -120,6 +139,7 @@ def ingest(msg):
         # node is alive but has no echo: not a reading, let the watchdog mark unknown
         with _lock:
             _last_reading[node_id] = {**(_last_reading.get(node_id) or {}), "fault": True, "miss": msg.get("miss")}
+        touch()
         return None
 
     raw = float(msg["raw_cm"])
@@ -146,6 +166,7 @@ def ingest(msg):
         _last_reading[node_id] = reading
     if old != new:
         _fire({"type": "transition", "segment_id": segment_id, "from": old, "to": new})
+    touch()
     return reading
 
 
@@ -159,6 +180,7 @@ def watchdog_tick():
         with _lock:
             if node_id in _last_reading:
                 _last_reading[node_id] = {**_last_reading[node_id], "state": "unknown", "silent": True}
+        touch()
 
 
 def start_watchdog():

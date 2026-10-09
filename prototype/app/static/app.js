@@ -1,4 +1,5 @@
-// Shared: poll /api/state every second, drive the top bar. Pages subscribe via TP.onState(fn).
+// Shared: live /api/stream pushes each reading; a 2 s poll covers a dropped stream.
+// Pages subscribe via TP.onState(fn). The map recolours from that same payload.
 window.TP = (function () {
   const handlers = [];
   let last = null;
@@ -45,14 +46,20 @@ window.TP = (function () {
     document.getElementById('st-clock').textContent = new Date().toLocaleTimeString();
   }
 
-  async function tick() {
-    try {
-      const st = await getJSON('/api/state');
-      last = st; topbar(st);
-      handlers.forEach(h => { try { h(st); } catch (e) { console.error(e); } });
-    } catch (e) { /* server down; keep trying */ }
+  function apply(st) {
+    last = st; topbar(st);
+    handlers.forEach(h => { try { h(st); } catch (e) { console.error(e); } });
   }
-  setInterval(tick, 1000); tick();
+
+  async function tick() {
+    try { apply(await getJSON('/api/state')); }
+    catch (e) { /* server down; keep trying */ }
+  }
+  setInterval(tick, 2000); tick();
+  if (window.EventSource) {
+    const es = new EventSource('/api/stream');
+    es.onmessage = (ev) => { try { apply(JSON.parse(ev.data)); } catch (e) { console.error(e); } };
+  }
 
   return { onState: fn => handlers.push(fn), getJSON, post, fmtAge, toast, last: () => last,
            COLORS: { green: '#2ecc71', yellow: '#f1c40f', red: '#e74c3c', unknown: '#7f8c8d' } };

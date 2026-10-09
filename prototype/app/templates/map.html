@@ -39,8 +39,13 @@
 <script>
 (async function () {
   const C = TP.COLORS;
-  const map = L.map('map', { zoomControl: true, attributionControl: false }).setView([0.330, 32.575], 13);
-  // No tile server: offline policy. White background; GeoJSON is the map.
+  const map = L.map('map', { zoomControl: true, attributionControl: {{ 'true' if basemap == 'osm' else 'false' }} }).setView([0.330, 32.575], 13);
+  {% if basemap == 'osm' %}
+  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+  }).addTo(map);
+  {% endif %}
   const segs = await TP.getJSON('/data/road_segments.geojson');
   const spots = await TP.getJSON('/data/blackspots.geojson');
 
@@ -96,11 +101,13 @@
   const list = document.getElementById('seg-list');
   function render(st) {
     states = {}; (st.segments || []).forEach(s => states[s.segment_id] = s);
+    const n = st.nodes && st.nodes['drain_01'];
     list.innerHTML = '';
     segs.features.forEach(f => {
       const p = f.properties; const s = states[p.segment_id] || { state: 'unknown' };
       const l = segLayers[p.segment_id];
       const live = p.node_id && (s.state === 'green' || s.state === 'yellow' || s.state === 'red');
+      const cm = (p.node_id && n && n.level_cm != null && !n.silent) ? Number(n.level_cm).toFixed(1) + ' cm' : '';
       if (l) {
         l.setStyle({
           color: C[s.state] || C.unknown,
@@ -111,12 +118,18 @@
         if (live) l.bringToFront();
       }
       const row = document.createElement('div'); row.className = 'seg-row';
-      row.innerHTML = `<span class="sw ${s.state}"></span><span class="n">${p.name}${p.node_id ? ' <small class="muted">· sensor</small>' : ''}</span><span class="s">${s.state}</span>`;
-      row.onclick = () => { map.fitBounds(l.getBounds().pad(0.5)); l.openPopup(); };
+      row.innerHTML = `<span class="sw ${s.state}"></span><span class="n">${p.name}${p.node_id ? ' <small class="muted">· sensor</small>' : ''}</span><span class="s">${s.state}${cm ? ' · ' + cm : ''}</span>`;
+      row.onclick = () => { if (!l) return; map.fitBounds(l.getBounds().pad(0.5)); l.openPopup(); };
       list.appendChild(row);
     });
-    const n = st.nodes && st.nodes['drain_01'];
-    if (nodeMarker) nodeMarker.setStyle({ fillColor: n && !n.silent && n.state !== 'unknown' ? C[n.state] : '#3498db' });
+    if (nodeMarker) {
+      const liveNode = n && !n.silent && n.state && n.state !== 'unknown' && n.level_cm != null;
+      nodeMarker.setStyle({ fillColor: liveNode ? (C[n.state] || '#3498db') : '#3498db' });
+      const label = liveNode
+        ? ('drain_01 · ' + n.state + ' · ' + Number(n.level_cm).toFixed(1) + ' cm')
+        : ('drain_01 · ' + ((n && n.state) || 'unknown'));
+      nodeMarker.setTooltipContent(label);
+    }
   }
   TP.onState(render);
 

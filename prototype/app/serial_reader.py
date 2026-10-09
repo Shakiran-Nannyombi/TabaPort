@@ -1,14 +1,16 @@
 """Serial reader thread. Reads JSON lines from the ESP32 and hands them to the state engine.
 
 SERIAL_URL examples
-  auto                      first /dev/ttyUSB*, /dev/ttyACM*, COM* found (default)
+  auto                      USB serial if a board is plugged in, otherwise the
+                            Wokwi simulator on TCP 4000 (tank) or 4001 (field)
   /dev/ttyUSB0  or  COM5    real board
-  rfc2217://localhost:4000  Wokwi simulator (development only)
+  rfc2217://127.0.0.1:4000  Wokwi simulator (development only)
   fake                      built-in simulator inside this process (no hardware, no Wokwi)
 """
 import glob
 import json
 import os
+import socket
 import sys
 import threading
 import time
@@ -19,6 +21,24 @@ import state_engine
 status = {"url": None, "connected": False, "lines": 0, "last_error": None, "mode": None}
 _port = None
 _port_lock = threading.Lock()
+
+# wokwi.toml rfc2217ServerPort: tank_node 4000, field_node 4001.
+_WOKWI_PORTS = (4000, 4001)
+
+
+def _wokwi_url():
+    """Return an rfc2217 URL when the Wokwi simulator is listening."""
+    for port in _WOKWI_PORTS:
+        sock = socket.socket()
+        sock.settimeout(0.3)
+        try:
+            if sock.connect_ex(("127.0.0.1", port)) == 0:
+                return f"rfc2217://127.0.0.1:{port}"
+        except OSError:
+            pass
+        finally:
+            sock.close()
+    return None
 
 
 def _autodetect():
@@ -33,7 +53,7 @@ def _autodetect():
         hits = sorted(glob.glob(pat))
         if hits:
             return hits[0]
-    return None
+    return _wokwi_url()
 
 
 def send(line):
@@ -77,6 +97,7 @@ def _forward(line):
 
 
 def note_uplink():
+    note_real()
     status.update(url="uplink", connected=True, mode="uplink", last_error=None)
 
 
@@ -134,23 +155,38 @@ def _real_loop(url):
 
 # ---------- in-process fake node (no hardware) ----------
 fake = {"level_cm": 2.0, "auto": False, "spike_every": 0, "silent": False, "_n": 0}
+_real_until = 0.0
+_demo = False
+
+
+def note_real():
+    """A live laptop reading is in. The public demo stays quiet so it does not overwrite it."""
+    global _real_until
+    _real_until = time.monotonic() + 8
 
 
 def _fake_loop():
     import random
-    status.update(url="fake", connected=True, mode="fake")
+    if not _demo:
+        status.update(url="fake", connected=True, mode="fake")
     h_sensor = state_engine.thresholds("drain_01")["h_sensor_cm"]
     while True:
         time.sleep(0.5)
         if fake["silent"]:
             status["connected"] = False
             continue
+        if _demo and time.monotonic() < _real_until:
+            continue
         status["connected"] = True
+        if _demo:
+            status.update(url="demo", connected=True, mode="demo", last_error=None)
         fake["_n"] += 1
         if fake["auto"]:
-            # slow rise then fall: a 3 minute pour scene
-            t = (fake["_n"] * 0.5) % 180
-            fake["level_cm"] = round(max(0.0, 22 * (1 - abs(t - 90) / 90)), 1)
+            # Local dev: a 3 minute pour. Public demo: a 48 s rise and fall so the map moves while you watch.
+            period = 48 if _demo else 180
+            half = period / 2
+            t = (fake["_n"] * 0.5) % period
+            fake["level_cm"] = round(max(0.0, 22 * (1 - abs(t - half) / half)), 1)
         raw = h_sensor - fake["level_cm"] + random.uniform(-0.4, 0.4)
         filtered = False
         if fake["spike_every"] and fake["_n"] % fake["spike_every"] == 0:
@@ -161,9 +197,13 @@ def _fake_loop():
 
 
 def start():
-    # The public hub has no USB port. It waits for the laptop to post real readings.
+    # The public hub has no USB port. It plays a live demo until a laptop posts a real reading.
     if os.environ.get("RENDER"):
-        status.update(url="uplink", connected=False, mode="uplink", last_error=None)
+        global _demo
+        _demo = True
+        fake["auto"] = True
+        status.update(url="demo", connected=True, mode="demo", last_error=None)
+        threading.Thread(target=_fake_loop, daemon=True, name="serial").start()
         return
     url = os.environ.get("SERIAL_URL", "auto")
     status["url"] = url

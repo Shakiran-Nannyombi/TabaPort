@@ -100,7 +100,7 @@ class _ShellState extends State<Shell> {
       });
       _tick();
     });
-    _poll = Timer.periodic(const Duration(seconds: 2), (_) => _tick());
+    _poll = Timer.periodic(const Duration(seconds: 1), (_) => _tick());
   }
 
   @override

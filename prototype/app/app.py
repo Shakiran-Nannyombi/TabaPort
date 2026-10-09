@@ -6,10 +6,11 @@
 
 Then open http://localhost:5000
 """
+import json
 import os
 import time
 
-from flask import Flask, jsonify, redirect, render_template, request, send_from_directory, url_for
+from flask import Flask, Response, jsonify, redirect, render_template, request, send_from_directory, stream_with_context, url_for
 
 import db
 import serial_reader
@@ -29,6 +30,8 @@ def _cors(resp):
     resp.headers["Access-Control-Allow-Origin"] = "*"
     resp.headers["Access-Control-Allow-Headers"] = "Content-Type"
     resp.headers["Access-Control-Allow-Methods"] = "GET, POST, OPTIONS"
+    if request.path.startswith("/api/"):
+        resp.headers["Cache-Control"] = "no-store"
     return resp
 
 
@@ -61,7 +64,9 @@ def index():
 
 @app.get("/map")
 def map_page():
-    return render_template("map.html", page="map")
+    # The laptop stays on GeoJSON only. The public hub has internet, so it draws the Kampala basemap.
+    basemap = "osm" if os.environ.get("RENDER") else ""
+    return render_template("map.html", page="map", basemap=basemap)
 
 
 @app.get("/jobs")
@@ -85,8 +90,7 @@ def data_file(name):
 
 
 # ---------- read API ----------
-@app.get("/api/state")
-def api_state():
+def state_payload():
     snap = state_engine.snapshot()
     jobs = db.query("SELECT status, COUNT(*) n FROM job GROUP BY status")
     snap["jobs"] = {r["status"]: r["n"] for r in jobs}
@@ -94,7 +98,26 @@ def api_state():
     snap["now"] = time.time()
     snap["escalate_after_s"] = db.cfg_float("escalate_after_s", 180)
     snap["unknown_after_s"] = db.cfg_float("unknown_after_s", 10)
-    return jsonify(snap)
+    return snap
+
+
+@app.get("/api/state")
+def api_state():
+    return jsonify(state_payload())
+
+
+@app.get("/api/stream")
+def api_stream():
+    """Push a snapshot the moment a reading lands, so the map does not wait for the next poll."""
+    def gen():
+        seen = -1
+        while True:
+            seen = state_engine.wait_rev(seen, 12)
+            yield "data: " + json.dumps(state_payload()) + "\n\n"
+
+    resp = Response(stream_with_context(gen()), mimetype="text/event-stream")
+    resp.headers["X-Accel-Buffering"] = "no"
+    return resp
 
 
 @app.get("/api/readings")
